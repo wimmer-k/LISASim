@@ -1,0 +1,3 @@
+. /usr/local/geant4_11.0/bin/geant4.sh
+source /usr/local/geant4_11.0/share/Geant4-11.0.3/geant4make/geant4make.sh
+echo "setting GEANT4 11.0"

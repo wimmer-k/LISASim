@@ -1,0 +1,42 @@
+.PHONY: all
+
+CPP         = g++
+ROOTCFLAGS  := $(shell root-config --cflags)
+ROOTLIBS    := $(shell root-config --libs)
+CFLAGS	    = -Wall -Wno-long-long -g -O3 $(ROOTCFLAGS) -fPIC -D_FILE_OFFSET_BITS=64 -MMD
+LFLAGS	    = -g -fPIC -shared
+
+INCLUDES    = -I./include
+LIB_DIR = $(HOME)/lib
+
+LIB_O_FILES = build/EventInformation.o build/EventInformationDictionary.o 
+
+lib: $(LIB_DIR)/libEventInfo.so
+
+$(LIB_DIR)/libEventInfo.so: $(LIB_O_FILES)
+	@echo "Making $@"
+	$(CPP) $(LFLAGS) -o $@ $^ -lc
+
+build/%.o: src/%.cc include/%.hh
+	@echo "Compiling $@"
+	@mkdir -p $(dir $@)
+	$(CPP) $(CFLAGS) $(INCLUDES) -c $< -o $@ 
+
+build/%Dictionary.o: build/%Dictionary.cc
+	@echo "Compiling $@"
+	@mkdir -p $(dir $@)
+	$(CPP) $(CFLAGS) $(INCLUDES) -fPIC -c $< -o $@
+
+build/%Dictionary.cc: include/%.hh include/%LinkDef.h
+	@echo "Building $@"
+	@mkdir -p $(dir $@)
+	rootcint -f $@ -c $(INCLUDES) $(SWITCH) $(notdir $^)
+
+build/%Dictionary_rdict.pcm: build/%Dictionary.cc
+	@echo "Confirming $@"
+	@touch $@
+
+%Dictionary_rdict.pcm: build/%Dictionary_rdict.pcm 
+	@echo "Placing $@"
+	@cp build/$@ $(LIB_DIR)
+
