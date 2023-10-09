@@ -63,7 +63,7 @@ private:
   // data members
   const G4Event* fevt;
   G4int fHCID = -1;
-  TTree * ftr;
+  //TTree * ftr;
   
 };
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
