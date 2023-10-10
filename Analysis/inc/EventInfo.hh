@@ -1,11 +1,12 @@
 #ifndef EventInformation_h
 #define EventInformation_h 1
 
+#ifdef ISSIM
 #include "G4VUserEventInformation.hh"
-//#include "G4ThreeVector.hh"
-//#include "G4SystemOfUnits.hh"
+#endif
 
 #include <vector>
+#include <iostream>
 
 #include "TObject.h"
 #include "TVector3.h"
@@ -18,13 +19,27 @@ public:
   }
   void Clear(Option_t * /*option*/ =""){
     fEdet.clear();
+    fID.clear();
+  }
+  void AddHit(int i, double E){
+    fEdet.push_back(E);
+    fID.push_back(i);    
   }
   void SetEdet(vector<double> Edet){fEdet = Edet;}
+  void SetLayerID(vector<int> id){fID = id;}
   
   vector<double> GetEnergyDetected(){return fEdet;}
-  
+  double GetEnergyDetected(int i){return fEdet[i];}
+  vector<int> GetLayers(){return fID;}
+  int GetLayerID(int i){return fID[i];}
+  void Print(Option_t * ="") const override {
+    for(UShort_t i=0;i<fEdet.size();i++)
+    cout << "ID = " << fID[i] << ", Edet = " << fEdet[i] << endl;
+  } 
+   
 protected:
   vector<double> fEdet;
+  vector<int> fID;
   ClassDef(LISAEvent, 1);
 };
 
@@ -73,6 +88,9 @@ public:
   double GetOutGoingBeta(int n){return fbetas[n];}
   
   TVector3 GetReactionPosition(){return freacpos;}
+  void Print(Option_t * ="") const override {
+    cout << "event ID = " << feventID << ", NLayers = " << fbetas.size() << endl;
+  } 
   
 protected:
   Int_t feventID;
@@ -90,6 +108,7 @@ protected:
   ClassDef(SimEvent, 1);
 };
 
+#ifdef ISSIM
 
 class EventInfo : public G4VUserEventInformation {
 public:
@@ -107,6 +126,6 @@ private:
   SimEvent* fsimevent;
   LISAEvent* flisaevent;
 };
-
+#endif
 
 #endif

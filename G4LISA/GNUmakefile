@@ -2,7 +2,7 @@
 # GNUmakefile for examples module.  Gabriele Cosmo, 06/04/98.
 # --------------------------------------------------------------
 
-name := LISAsim
+name := G4LISA
 G4TARGET := $(name)
 G4EXLIB := true
 #CPPVERBOSE := true
@@ -23,8 +23,8 @@ CPPFLAGS += $(shell $(ROOTSYS)/bin/root-config --cflags) $(EXTRA_INCLUDES)
 LDFLAGS  += $(shell $(ROOTSYS)/bin/root-config --libs)
 CPPFLAGS  += -Wl,--no-as-needed
 LDFLAGS  += -Wl,--no-as-needed
-CPPFLAGS  += -Woverloaded-virtual
-LDFLAGS  += -Woverloaded-virtual
+CPPFLAGS  += -Woverloaded-virtual -DISSIM
+LDFLAGS  += -Woverloaded-virtual -DISSIM
 
 EXTRALIBS = -L$(LIB_DIR) -lCommandLineInterface -lEventInfo
 
@@ -32,7 +32,6 @@ include $(G4INSTALL)/config/binmake.gmk
 
 test:	
 	echo $(LDFLAGS)
-
 
 visclean:
 	rm -f g4*.prim g4*.eps g4*.wrl

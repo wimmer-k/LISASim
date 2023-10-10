@@ -1,32 +1,3 @@
-//
-// ********************************************************************
-// * License and Disclaimer                                           *
-// *                                                                  *
-// * The  Geant4 software  is  copyright of the Copyright Holders  of *
-// * the Geant4 Collaboration.  It is provided  under  the terms  and *
-// * conditions of the Geant4 Software License,  included in the file *
-// * LICENSE and available at  http://cern.ch/geant4/license .  These *
-// * include a list of copyright holders.                             *
-// *                                                                  *
-// * Neither the authors of this software system, nor their employing *
-// * institutes,nor the agencies providing financial support for this *
-// * work  make  any representation or  warranty, express or implied, *
-// * regarding  this  software system or assume any liability for its *
-// * use.  Please see the license in the file  LICENSE  and URL above *
-// * for the full disclaimer and the limitation of liability.         *
-// *                                                                  *
-// * This  code  implementation is the result of  the  scientific and *
-// * technical work of the GEANT4 collaboration.                      *
-// * By using,  copying,  modifying or  distributing the software (or *
-// * any work based  on the software)  you  agree  to acknowledge its *
-// * use  in  resulting  scientific  publications,  and indicate your *
-// * acceptance of all terms of the Geant4 Software license.          *
-// ********************************************************************
-//
-//
-/// \file LISAHit.hh
-/// \brief Definition of the LISAHit class
-
 #ifndef LISAHit_h
 #define LISAHit_h 1
 
@@ -36,19 +7,12 @@
 #include "G4ThreeVector.hh"
 #include "G4Threading.hh"
 
-
-/// LISA hit class
-///
-/// It defines data members to store the energy deposit and position
-/// of charged particles in a selected volume:
-/// - fEdep, fpos
-
 class LISAHit : public G4VHit
 {
 public:
-  LISAHit();
+  LISAHit(){};
   LISAHit(const LISAHit&) = default;
-  ~LISAHit() override;
+  ~LISAHit() override {};
 
   // operators
   LISAHit& operator=(const LISAHit&) = default;
@@ -61,9 +25,6 @@ public:
   void Draw()  override{}
   void Print() override;
 
-  // methods to handle data
-  void Add(G4double de, G4double dl);
-
   // set
   void SetLayerID(G4int layer_id){ flayerID = layer_id;};
   void SetEdep(G4double de){ fEdep = de; };
@@ -75,21 +36,17 @@ public:
 
 private:
   G4int flayerID;
-  G4double fEdep;        ///< Energy deposit in the sensitive volume
-  G4ThreeVector fpos;    ///< Position of the hit in the  sensitive volume
+  G4double fEdep;       
+  G4ThreeVector fpos;  
 };
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 using LISAHitsCollection = G4THitsCollection<LISAHit>;
 
 extern G4ThreadLocal G4Allocator<LISAHit>* LISAHitAllocator;
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
-inline void* LISAHit::operator new(size_t)
-{
-  if (!LISAHitAllocator) {
+inline void* LISAHit::operator new(size_t){
+  if (!LISAHitAllocator){
     LISAHitAllocator = new G4Allocator<LISAHit>;
   }
   void *hit;
@@ -97,31 +54,17 @@ inline void* LISAHit::operator new(size_t)
   return hit;
 }
 
-inline void LISAHit::operator delete(void *hit)
-{
+inline void LISAHit::operator delete(void *hit){
   if (!LISAHitAllocator) {
     LISAHitAllocator = new G4Allocator<LISAHit>;
   }
   LISAHitAllocator->FreeSingle((LISAHit*) hit);
 }
-/*
-inline void LISAHit::Add(G4double de, G4double dl) {
-  fEdep += de;
-  //fTrackLength += dl;
-}
-*/
-inline G4int LISAHit::GetLayerID() const {
-  return flayerID;
-}
 
-inline G4double LISAHit::GetEdep() const {
-  return fEdep;
-}
+inline G4int LISAHit::GetLayerID() const {return flayerID;}
 
-inline G4ThreeVector LISAHit::GetPosition() const {
-  return fpos;
-}
+inline G4double LISAHit::GetEdep() const {return fEdep;}
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+inline G4ThreeVector LISAHit::GetPosition() const {return fpos;}
 
 #endif

@@ -1,9 +1,3 @@
-/***********************************************************************
- *
- *    sensitive detector for detector read-out of HODOSCOPE
- *
- ***********************************************************************/
-
 #ifndef SensitiveDetector_h
 #define SensitiveDetector_h 1
 
@@ -18,8 +12,7 @@
 class G4Step;
 class G4HCofThisEvent;
 
-class SensitiveDetector : public G4VSensitiveDetector
-{
+class SensitiveDetector : public G4VSensitiveDetector {
 public:
   SensitiveDetector(const G4String& name);
   ~SensitiveDetector() override;
@@ -33,8 +26,6 @@ private:
   LISAHitsCollection* fhitsCollection = nullptr;
   G4String fname;
 };
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 #endif
 

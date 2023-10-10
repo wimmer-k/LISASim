@@ -33,19 +33,20 @@
 #include "G4VUserActionInitialization.hh"
 #include <G4String.hh>
 
+#include "DataManager.hh"
 /// Action initialization class.
 
 class ActionInitialization : public G4VUserActionInitialization
 {
 public:
-  ActionInitialization(G4String);
+  ActionInitialization(DataManager*);
   ~ActionInitialization() override;
 
   void BuildForMaster() const override;
   void Build() const override;
   
 private:
-  G4String fdatafile;
+  DataManager* fdata;
   
 };
 #endif
