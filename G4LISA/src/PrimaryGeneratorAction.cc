@@ -11,7 +11,7 @@
 #include "G4SystemOfUnits.hh"
 #include "Randomize.hh"
 
-PrimaryGeneratorAction::PrimaryGeneratorAction(){
+PrimaryGeneratorAction::PrimaryGeneratorAction(DetectorConstruction *detector){
   G4int nofParticles = 1;
   fParticleGun = new G4ParticleGun(nofParticles);
 
@@ -22,6 +22,7 @@ PrimaryGeneratorAction::PrimaryGeneratorAction(){
   fParticleGun->SetParticleDefinition(particleDefinition);
   fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.));
   fParticleGun->SetParticleEnergy(50.*MeV);
+  fdetector = detector;
 }
 
 PrimaryGeneratorAction::~PrimaryGeneratorAction(){

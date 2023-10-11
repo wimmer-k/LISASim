@@ -134,7 +134,7 @@ int main(int argc,char** argv)
   runManager->SetUserInitialization(physicsList);
 
   // User Action classes
-  auto actionInitialization = new ActionInitialization(data);
+  auto actionInitialization = new ActionInitialization(data,detConstruction);
   runManager->SetUserInitialization(actionInitialization);
 
   // Initialize visualization
