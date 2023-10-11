@@ -31,10 +31,10 @@ endif
 all: EventInfo $(EXTRAS) 
 	echo Done
 
-HodoAna: HodoAna.cc 
+LISAAna: LISAAna.cc 
 	@echo "Compiling $@"
 	@$(CPP) $(CFLAGS) $(INCLUDES) $^ $(LIBS) -o $@
-	@cp HodoAna $(HOME)/bin
+	@cp LISAAna $(HOME)/bin
 
 EventInfo: build/EventInfo.o build/EventInfoDictionary.o 
 	@echo "Compiling $@"
@@ -63,4 +63,4 @@ build/%Dictionary_rdict.pcm: build/%Dictionary.cc
 	@echo "Placing $@"
 	@cp build/$@ $(LIB_DIR)
 clean:
-	rm  -f HodoAna build/*.o build/*Dictionary*
+	rm  -f LISAAna build/*.o build/*Dictionary*

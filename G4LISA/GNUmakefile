@@ -26,7 +26,7 @@ LDFLAGS  += -Wl,--no-as-needed
 CPPFLAGS  += -Woverloaded-virtual -DISSIM
 LDFLAGS  += -Woverloaded-virtual -DISSIM
 
-EXTRALIBS = -L$(LIB_DIR) -lCommandLineInterface -lEventInfo
+EXTRALIBS = -L$(LIB_DIR) -lEventInfo
 
 include $(G4INSTALL)/config/binmake.gmk
 
