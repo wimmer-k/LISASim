@@ -38,11 +38,11 @@ void EventAction::EndOfEventAction(const G4Event* event){
   fevt = event;
   EventInfo* eventInfo = (EventInfo*)fevt->GetUserInformation();
   eventInfo->GetSimEvent()->SetEventID(fevt->GetEventID());
-  cout << "event number " << eventInfo->GetSimEvent()->GetEventID()  << " with " <<  eventInfo->GetSimEvent()->GetNLayers() << " targets " << endl;
+  //cout << "event number " << eventInfo->GetSimEvent()->GetEventID()  << " with " <<  eventInfo->GetSimEvent()->GetNLayers() << " targets " << endl;
   G4HCofThisEvent * HCE = event->GetHCofThisEvent();
   for(int i=0;i<eventInfo->GetSimEvent()->GetNLayers();i++){
     LISAHitsCollection* collection = (LISAHitsCollection*)(HCE->GetHC(i));
-    //G4cout << i << ", collection->entries()" << collection->entries() << endl;
+    G4cout << i << ", collection->entries()" << collection->entries() << endl;
     /*
       G4int Nhits = collection->entries();
       if(Nhits>1){
@@ -60,7 +60,8 @@ void EventAction::EndOfEventAction(const G4Event* event){
       eventInfo->GetLISAEvent()->AddHit((*collection)[0]->GetLayerID(), (*collection)[0]->GetEdep());
       }
     */
-    eventInfo->GetLISAEvent()->AddHit((*collection)[0]->GetLayerID(), (*collection)[0]->GetEdep());
+    if(collection->entries()>0)
+      eventInfo->GetLISAEvent()->AddHit((*collection)[0]->GetLayerID(), (*collection)[0]->GetEdep());
   }// layers
   fdata->FillTree(eventInfo);
 }

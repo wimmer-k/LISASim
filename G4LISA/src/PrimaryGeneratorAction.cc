@@ -56,13 +56,13 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent){
 
   fParticleGun->GeneratePrimaryVertex(anEvent);
 
-  
+  /*
 
   G4cout << G4endl << "------------------------------------------------------------" << G4endl;
   G4cout << "shooting " << fParticleGun->GetParticleDefinition()->GetParticleName() << " with  " << fParticleGun->GetParticleEnergy() << " MeV from (" << 0.<<", "<<0.<<", "<<-worldZHalfLength<<") to (";
   G4cout << fParticleGun->GetParticleMomentumDirection().x() <<", " << fParticleGun->GetParticleMomentumDirection().y() <<", " << fParticleGun->GetParticleMomentumDirection().x() <<")" << G4endl;
   G4cout << G4endl << "------------------------------------------------------------" << G4endl;
-
+  */
   
   
 }
