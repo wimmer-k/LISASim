@@ -39,7 +39,8 @@ private:
   G4Box* fLayer_solid[MAXTARGETS];
   G4LogicalVolume* fLayer_logic[MAXTARGETS];
   G4VPhysicalVolume* fLayer_place[MAXTARGETS];
-    
+  G4Box* PCB_box ;
+  G4Box* PCB_box_hole;  
   G4bool fCheckOverlaps = true; // option to activate checking of volumes overlaps
 };
 

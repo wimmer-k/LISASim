@@ -8,7 +8,7 @@ G4EXLIB := true
 #CPPVERBOSE := true
 
 ifndef G4INSTALL
-  G4INSTALL = ../../..
+  G4INSTALL = ../../source
 endif
 
 LIB_DIR = $(HOME)/lib

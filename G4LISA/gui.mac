@@ -37,7 +37,3 @@
 #
 
 
-# particle gun definition
-/gun/particle ion
-/gun/ion 50 132
-/gun/energy 26400 MeV

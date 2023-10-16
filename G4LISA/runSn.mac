@@ -9,7 +9,22 @@
 # Initialize kernel
 /run/initialize
 
-/gun/particle ion
-/gun/ion 50 132
-/gun/energy 26400 MeV
-/run/beamOn 300
+/BeamIn/A 132
+/BeamIn/Z 50
+/BeamIn/KEu 200 MeV
+/BeamIn/Dpp 0.0
+/BeamIn/Focus/X 0 cm
+/BeamIn/Focus/DX 0 cm
+/BeamIn/Focus/Y 0 cm
+/BeamIn/Focus/DY 0 cm
+/BeamIn/Focus/Z 0 cm
+/BeamIn/Focus/maxAta 0 mrad
+/BeamIn/Focus/maxBta 0 mrad
+/BeamIn/Focus/Ata0 0 mrad
+/BeamIn/Focus/Bta0 0 mrad
+
+
+
+/BeamIn/Report
+
+/run/beamOn 1

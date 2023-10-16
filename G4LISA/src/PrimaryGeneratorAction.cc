@@ -7,22 +7,27 @@
 #include "G4Event.hh"
 #include "G4ParticleGun.hh"
 #include "G4ParticleTable.hh"
+#include "G4IonTable.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4SystemOfUnits.hh"
 #include "Randomize.hh"
 
-PrimaryGeneratorAction::PrimaryGeneratorAction(DetectorConstruction *detector){
-  G4int nofParticles = 1;
-  fParticleGun = new G4ParticleGun(nofParticles);
+PrimaryGeneratorAction::PrimaryGeneratorAction(DetectorConstruction *detConstruction, Incoming_Beam* BI):BeamIn(BI),fdetector(detConstruction)
 
-  // default particle kinematic
-  //
-  auto particleDefinition
-    = G4ParticleTable::GetParticleTable()->FindParticle("e-");
-  fParticleGun->SetParticleDefinition(particleDefinition);
-  fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.));
-  fParticleGun->SetParticleEnergy(50.*MeV);
-  fdetector = detector;
+
+{
+  
+  // n_particle = 1;
+  // fParticleGun = new G4ParticleGun(n_particle);
+
+  // // default particle kinematic
+  
+  // auto particleDefinition
+  //   = G4ParticleTable::GetParticleTable()->FindParticle("e+");
+  // fParticleGun->SetParticleDefinition(particleDefinition);
+  // fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.));
+  // fParticleGun->SetParticleEnergy(100.*MeV);
+   
 }
 
 PrimaryGeneratorAction::~PrimaryGeneratorAction(){
@@ -50,17 +55,46 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent){
     G4Exception("PrimaryGeneratorAction::GeneratePrimaries()",
       "MyCode0002", JustWarning, msg);
   }
+ 
+
+
+   particleTable = G4ParticleTable::GetParticleTable();
+   ionTable = G4IonTable::GetIonTable();
+
+	ion =  ionTable->GetIon(BeamIn->getZ(),BeamIn->getA(),BeamIn->getEx());
+   
+
+  n_particle = 1;
+  fParticleGun = new G4ParticleGun(n_particle);
+
+  // default particle kinematic
   
-  // Set gun position
-  fParticleGun->SetParticlePosition(G4ThreeVector(0., 0., -worldZHalfLength));
+  auto particleDefinition
+    = particleTable->FindParticle("e+");
+  fParticleGun->SetParticleDefinition(ion);
+  fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.));
+  fParticleGun->SetParticleEnergy(50000*MeV);
 
-  fParticleGun->GeneratePrimaryVertex(anEvent);
 
+
+   G4cout<<BeamIn->getZ()<<G4endl;
+	
+	 position=BeamIn->getPosition();
+	 fParticleGun->SetParticlePosition(position);
+	
+	 direction=BeamIn->getDirection();
+	 fParticleGun->SetParticleMomentumDirection(direction);
+	
+	 KE=BeamIn->getKE(ion);
+	 fParticleGun->SetParticleEnergy(KE);
+
+	// fParticleGun->GeneratePrimaryVertex(anEvent);
+fParticleGun->GeneratePrimaryVertex(anEvent);
   
 
-  G4cout << G4endl << "------------------------------------------------------------" << G4endl;
-  G4cout << "shooting " << fParticleGun->GetParticleDefinition()->GetParticleName() << " with  " << fParticleGun->GetParticleEnergy() << " MeV from (" << 0.<<", "<<0.<<", "<<-worldZHalfLength<<") to (";
-  G4cout << fParticleGun->GetParticleMomentumDirection().x() <<", " << fParticleGun->GetParticleMomentumDirection().y() <<", " << fParticleGun->GetParticleMomentumDirection().x() <<")" << G4endl;
+  G4cout << G4endl << "------------------------------------------------" << G4endl;
+  G4cout << "shooting " << fParticleGun->GetParticleDefinition()->GetParticleName() << " with  " << fParticleGun->GetParticleEnergy() << " MeV from (" << position.getX()<<", "<<position.getY()<<", "<<position.getZ()<<") to (";
+  G4cout << fParticleGun->GetParticleMomentumDirection().x() <<", " << fParticleGun->GetParticleMomentumDirection().y() <<", " << fParticleGun->GetParticleMomentumDirection().z() <<")" << G4endl;
   G4cout << G4endl << "------------------------------------------------------------" << G4endl;
 
   
