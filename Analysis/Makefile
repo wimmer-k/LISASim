@@ -26,13 +26,13 @@ ifeq ($(USING_ROOT_6),1)
 	EXTRAS =  EventInfoDictionary_rdict.pcm 
 endif
 
-all: LISAAna EventInfo $(EXTRAS) 
+all: LISAana EventInfo $(EXTRAS) 
 	echo Done
 
-LISAAna: LISAAna.cc 
+LISAana: LISAana.cc 
 	@echo "Compiling $@"
 	@$(CPP) $(CFLAGS) $(INCLUDES) $^ $(LIBS) -o $@
-	@cp LISAAna $(HOME)/bin
+	@mv LISAAna $(HOME)/bin
 
 EventInfo: build/EventInfo.o build/EventInfoDictionary.o 
 	@echo "Compiling $@"
