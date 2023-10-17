@@ -32,7 +32,7 @@ all: LISAana EventInfo $(EXTRAS)
 LISAana: LISAana.cc 
 	@echo "Compiling $@"
 	@$(CPP) $(CFLAGS) $(INCLUDES) $^ $(LIBS) -o $@
-	@mv LISAAna $(HOME)/bin
+	@mv LISAana $(HOME)/bin
 
 EventInfo: build/EventInfo.o build/EventInfoDictionary.o 
 	@echo "Compiling $@"
@@ -61,4 +61,4 @@ build/%Dictionary_rdict.pcm: build/%Dictionary.cc
 	@echo "Placing $@"
 	@cp build/$@ $(LIB_DIR)
 clean:
-	rm  -f LISAAna build/*.o build/*Dictionary*
+	rm  -f LISAana build/*.o build/*Dictionary*
