@@ -6,8 +6,11 @@
 #include "SensitiveDetector.hh"
 #include "G4Material.hh"
 #include "G4NistManager.hh"
-
+#include "G4Element.hh"
+#include "G4Isotope.hh"
 #include "G4Box.hh"
+#include "G4VSolid.hh"
+#include "G4SubtractionSolid.hh"
 #include "G4LogicalVolume.hh"
 #include "G4PVPlacement.hh"
 #include "G4PVReplica.hh"
@@ -55,12 +58,46 @@ G4VPhysicalVolume* DetectorConstruction::Construct(){
 void DetectorConstruction::DefineMaterials(){
   G4double a;  // mass of a mole;
   G4double z;  // z=mean number of protons;
+  G4int natoms;
+  G4int ncomp ;
+  G4String symbol;
   G4double density;
-
+  
   new G4Material("Diamond", z=6, a = 12.01*g/mole, density= 3.515*g/cm3);
   // Vacuum
   new G4Material("Galactic", z=1., a=1.01*g/mole,density= universe_mean_density,
                   kStateGas, 2.73*kelvin, 3.e-18*pascal);
+
+G4Element* elH =
+new G4Element("Hydrogen", symbol="H", z=1., a = 1.01*g/mole);
+
+G4Element* elO =
+new G4Element("Oxygen", symbol="O", z=8., a = 16.00*g/mole);
+
+G4Element*elC =
+new G4Element("Carbon", symbol="C", z=6., a = 12.011*g/mole);
+
+G4Element*elCl =
+new G4Element("Chlorine", symbol="Cl", z=17., a = 35.45*g/mole);
+
+
+
+G4Material* Epoxy =
+new G4Material("Epoxy", density = 1.25*g/cm3, ncomp=4);
+Epoxy->AddElement(elH, natoms=25);
+Epoxy->AddElement(elO, natoms=5);
+Epoxy->AddElement(elCl, natoms=1);
+Epoxy->AddElement(elC, natoms=21);
+
+
+
+
+
+
+
+
+
+
 
   // Print materials
   G4cout << *(G4Material::GetMaterialTable()) << G4endl;
@@ -75,6 +112,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
   // Get materials
   auto defaultMaterial = G4Material::GetMaterial("Galactic");
   auto LISAMaterial = G4Material::GetMaterial("Diamond");
+  auto PCBMaterial = G4Material::GetMaterial("Epoxy");
 
   if ( ! defaultMaterial || ! LISAMaterial ) {
     G4ExceptionDescription msg;
@@ -112,6 +150,29 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
   
   auto DiamondSizeXY = 5*mm;
   char name[100];
+  auto PCB_thickness = 1.8*mm;
+
+//////PCB_construction///////
+    PCB_box = new G4Box("PCB_box",                //its name
+				25*mm,32.5*mm,PCB_thickness/2);
+    PCB_box_hole = new G4Box("PCB_box_hole",                //its name
+				DiamondSizeXY/2,DiamondSizeXY/2,PCB_thickness+1*mm);
+
+    G4VSolid* subtract = new G4SubtractionSolid("sub1", PCB_box, PCB_box_hole, 0 , G4ThreeVector(22.*mm,22.*mm,0.));
+
+
+  G4LogicalVolume* PCB_board = new G4LogicalVolume(subtract,PCBMaterial,"PCB_board") ;
+
+  G4VisAttributes* PCB_vis_attributes = new G4VisAttributes(G4Colour::Green());
+  PCB_vis_attributes->SetForceSolid(true);
+  PCB_board->SetVisAttributes(PCB_vis_attributes);
+
+  new G4PVPlacement(0,G4ThreeVector(3.*mm,3.*mm,-20.*mm),PCB_board,"PCB_board",world_logic,false,0) ;
+  
+
+
+
+
 
   G4double x = -0*cm; // front of first layer is at 0
   G4cout << G4endl << "------------------------------------------------------------" << G4endl;
