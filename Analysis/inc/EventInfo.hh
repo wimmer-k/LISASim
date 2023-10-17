@@ -17,7 +17,7 @@ public:
   LISAEvent(){
     Clear();
   }
-  void Clear(Option_t * /*option*/ =""){
+  void Clear(Option_t * /*option*/ ="") override {
     fEdet.clear();
     fID.clear();
   }
@@ -31,6 +31,7 @@ public:
   vector<double> GetEnergyDetected(){return fEdet;}
   double GetEnergyDetected(int i){return fEdet[i];}
   vector<int> GetLayers(){return fID;}
+  int GetNLayers(){return fID.size();}
   int GetLayerID(int i){return fID[i];}
   void Print(Option_t * ="") const override {
     for(UShort_t i=0;i<fEdet.size();i++)
@@ -40,7 +41,7 @@ public:
 protected:
   vector<double> fEdet;
   vector<int> fID;
-  ClassDef(LISAEvent, 1);
+  ClassDefOverride(LISAEvent, 1);
 };
 
 
@@ -49,7 +50,7 @@ public:
   SimEvent(){
     Clear();
   }
-  void Clear(Option_t * /*option*/ =""){
+  void Clear(Option_t * /*option*/ ="") override {
     fincdir.SetXYZ(-100,0,0);
     fincpos.SetXYZ(-10,0,0);
     fEbeam = 0;
@@ -105,7 +106,7 @@ protected:
   
   TVector3 freacpos;
   
-  ClassDef(SimEvent, 1);
+  ClassDefOverride(SimEvent, 1);
 };
 
 #ifdef ISSIM

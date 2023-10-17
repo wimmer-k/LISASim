@@ -15,12 +15,10 @@ ALLIBS  = -lm $(ROOTLIBS) $(ROOTGLIBS) -L$(LIB_DIR) -lCommandLineInterface -lEve
 
 CPP             = g++
 CFLAGS		= -pedantic -Wall -Wno-long-long -g -O3 $(ROOTCFLAGS) -fPIC
-DFLAGS		= -Wall -Wno-long-long -g -O3 $(ROOTCFLAGS) -fPIC
 CFLAGS		+= -Wl,--no-as-needed
-DFLAGS		+= -Wl,--no-as-needed
 
 INCLUDES        = -I./inc -I$(COMMON_DIR)
-LFLAGS		= -fPIC -O2 -g $(ROOTLDFLAGS)
+LFLAGS		= -fPIC -O2 -g 
 LIBS 		= $(ALLIBS)
 
 USING_ROOT_6 = $(shell expr $(shell root-config --version | cut -f1 -d.) \>= 6)
@@ -28,7 +26,7 @@ ifeq ($(USING_ROOT_6),1)
 	EXTRAS =  EventInfoDictionary_rdict.pcm 
 endif
 
-all: EventInfo $(EXTRAS) 
+all: LISAAna EventInfo $(EXTRAS) 
 	echo Done
 
 LISAAna: LISAAna.cc 
@@ -38,7 +36,7 @@ LISAAna: LISAAna.cc
 
 EventInfo: build/EventInfo.o build/EventInfoDictionary.o 
 	@echo "Compiling $@"
-	$(CPP) $(LFLAGS) -shared -Wl,-soname,libEventInfo.so -o $(LIB_DIR)/libEventInfo.so $^ -lc
+	@$(CPP) $(LFLAGS) -shared -Wl,-soname,libEventInfo.so -o $(LIB_DIR)/libEventInfo.so $^ -lc
 
 build/%.o: src/%.cc inc/%.hh
 	@echo "Compiling $@"

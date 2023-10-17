@@ -42,7 +42,7 @@ void EventAction::EndOfEventAction(const G4Event* event){
   G4HCofThisEvent * HCE = event->GetHCofThisEvent();
   for(int i=0;i<eventInfo->GetSimEvent()->GetNLayers();i++){
     LISAHitsCollection* collection = (LISAHitsCollection*)(HCE->GetHC(i));
-    G4cout << i << ", collection->entries()" << collection->entries() << endl;
+    //G4cout << i << ", collection->entries()" << collection->entries() << endl;
     /*
       G4int Nhits = collection->entries();
       if(Nhits>1){
