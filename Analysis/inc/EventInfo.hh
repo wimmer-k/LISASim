@@ -28,10 +28,10 @@ public:
   void SetEdet(vector<double> Edet){fEdet = Edet;}
   void SetLayerID(vector<int> id){fID = id;}
   
+  int GetNLayers(){return fID.size();}
   vector<double> GetEnergyDetected(){return fEdet;}
   double GetEnergyDetected(int i){return fEdet[i];}
   vector<int> GetLayers(){return fID;}
-  int GetNLayers(){return fID.size();}
   int GetLayerID(int i){return fID[i];}
   void Print(Option_t * ="") const override {
     for(UShort_t i=0;i<fEdet.size();i++)
