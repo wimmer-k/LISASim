@@ -119,6 +119,10 @@ public:
   }
   SimEvent* GetSimEvent(){return fsimevent;}
   LISAEvent* GetLISAEvent(){return flisaevent;}
+  
+  void SetSimEvent(SimEvent* simev){fsimevent = simev;}
+  void SetLISAEvent(LISAEvent* lisaev){flisaevent = lisaev;}
+  
   ~EventInfo(){};
 
   inline virtual void Print()const{;}
