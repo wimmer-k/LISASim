@@ -31,7 +31,7 @@ void DataManager::Init(){
 }
 void DataManager::FillTree(EventInfo* info){
 
-  Clear();
+  //Clear();
   fsim = info->GetSimEvent();
   flisa = info->GetLISAEvent();
   ftree->Fill();

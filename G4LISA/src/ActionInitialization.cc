@@ -8,7 +8,7 @@
 ActionInitialization::ActionInitialization(DataManager* data,DetectorConstruction *detector,Incoming_Beam* BI){
   fdata = data;
   fdetector = detector;
-  fBI = BI ;
+  fbeamIn = BI ;
 }
 
 ActionInitialization::~ActionInitialization(){}
@@ -19,8 +19,8 @@ void ActionInitialization::BuildForMaster() const{
 
 void ActionInitialization::Build() const
 {
-  SetUserAction(new PrimaryGeneratorAction(fdetector,fBI));
   SetUserAction(new RunAction(fdata));
   SetUserAction(new EventAction(fdata));
+  SetUserAction(new PrimaryGeneratorAction(fdetector,fbeamIn,fdata));
   SetUserAction(new SteppingAction);
 }

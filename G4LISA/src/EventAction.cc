@@ -17,9 +17,15 @@ EventAction::EventAction(DataManager* data){
 EventAction::~EventAction(){}
 
 void EventAction::BeginOfEventAction(const G4Event* event){
+  //G4cout << __PRETTY_FUNCTION__ << G4endl;
   fevt = event;
-  G4EventManager::GetEventManager()->SetUserInformation(new EventInfo);
-  EventInfo* eventInfo = (EventInfo*)fevt->GetUserInformation();
+  EventInfo* eventInfo = new EventInfo();
+  //cout << "fdata->GetSimEvent()->GetBeamEnergy() " << fdata->GetSimEvent()->GetBeamEnergy() << endl;
+  eventInfo->SetSimEvent(fdata->GetSimEvent());
+  
+  G4EventManager::GetEventManager()->SetUserInformation(eventInfo);
+  eventInfo = (EventInfo*)fevt->GetUserInformation();
+  //cout << "eventInfo->GetSimEvent()->GetBeamEnergy() " << eventInfo->GetSimEvent()->GetBeamEnergy() << endl;
   G4SDManager * SDman = G4SDManager::GetSDMpointer();
   int ntargets = 0;
   for(int t=0;t<MAXTARGETS;t++){
@@ -35,14 +41,16 @@ void EventAction::BeginOfEventAction(const G4Event* event){
 }
 
 void EventAction::EndOfEventAction(const G4Event* event){
+  //G4cout << __PRETTY_FUNCTION__ << G4endl;
   fevt = event;
   EventInfo* eventInfo = (EventInfo*)fevt->GetUserInformation();
   eventInfo->GetSimEvent()->SetEventID(fevt->GetEventID());
+  //cout << "eventInfo->GetSimEvent()->GetBeamEnergy() " << eventInfo->GetSimEvent()->GetBeamEnergy() << endl;
   //cout << "event number " << eventInfo->GetSimEvent()->GetEventID()  << " with " <<  eventInfo->GetSimEvent()->GetNLayers() << " targets " << endl;
   G4HCofThisEvent * HCE = event->GetHCofThisEvent();
   for(int i=0;i<eventInfo->GetSimEvent()->GetNLayers();i++){
     LISAHitsCollection* collection = (LISAHitsCollection*)(HCE->GetHC(i));
-    G4cout << i << ", collection->entries()" << collection->entries() << endl;
+    //G4cout << i << ", collection->entries()" << collection->entries() << endl;
     /*
       G4int Nhits = collection->entries();
       if(Nhits>1){

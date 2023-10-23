@@ -21,7 +21,7 @@ public:
 private:
   DataManager* fdata;
   DetectorConstruction* fdetector;
-  Incoming_Beam* fBI ;
+  Incoming_Beam* fbeamIn ;
   
 };
 #endif

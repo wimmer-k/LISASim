@@ -148,9 +148,9 @@ int main(int argc,char** argv)
   Incoming_Beam* BeamIn = new Incoming_Beam();
   Incoming_Beam_Messenger* IncomingBeamMessenger = new Incoming_Beam_Messenger(BeamIn);
 
-  cout << "Primary Generator" << endl;
-  PrimaryGeneratorAction* generatorAction = new PrimaryGeneratorAction(detConstruction,BeamIn);
-  cout << "... Done///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////" << endl;
+  // cout << "Primary Generator" << endl;
+  // PrimaryGeneratorAction* generatorAction = new PrimaryGeneratorAction(detConstruction,BeamIn,data);
+  // cout << "... Done///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////" << endl;
 
  // User Action classes
   auto actionInitialization = new ActionInitialization(data,detConstruction,BeamIn);

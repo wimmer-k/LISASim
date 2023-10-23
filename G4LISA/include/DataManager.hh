@@ -21,7 +21,10 @@ public:
   void Clear(const Option_t* option="");
   void Close();
   int GetNevents(){return fnevents;};
-
+  SimEvent* GetSimEvent(){return fsim;}
+  LISAEvent* GetLISAEvent(){return flisa;}
+  
+  
 private:
   int fnevents;
   SimEvent* fsim;
