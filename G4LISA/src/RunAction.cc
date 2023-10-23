@@ -8,21 +8,23 @@
 
 
 RunAction::RunAction(DataManager *data){
-  //G4cout << __PRETTY_FUNCTION__ << G4endl;
+  G4cout << __PRETTY_FUNCTION__ << G4endl;
   fdata = data;
   fdata->Clear();
   fdata->Init();
 }
 
 RunAction::~RunAction(){
+  G4cout << __PRETTY_FUNCTION__ << G4endl;
 }
 
 void RunAction::BeginOfRunAction(const G4Run* /*run*/){
+  G4cout << __PRETTY_FUNCTION__ << G4endl;
   fdata->Clear();
   fdata->Init();
 }
 
 void RunAction::EndOfRunAction(const G4Run* /*run*/){
-  //G4cout << __PRETTY_FUNCTION__ << G4endl;
+  G4cout << __PRETTY_FUNCTION__ << G4endl;
   fdata->Close();
 }

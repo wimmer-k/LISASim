@@ -15,3 +15,22 @@
 #
 # Visualization setting
 /control/execute vis.mac
+/BeamIn/A 132
+/BeamIn/Z 50
+/BeamIn/KEu 20 MeV
+/BeamIn/Dpp 0.0
+/BeamIn/Focus/X 0 cm
+/BeamIn/Focus/DX 0 cm
+/BeamIn/Focus/Y 0 cm
+/BeamIn/Focus/DY 0 cm
+/BeamIn/Focus/Z -2 cm
+/BeamIn/Focus/maxAta 10 mrad
+/BeamIn/Focus/maxBta 10 mrad
+/BeamIn/Focus/Ata0 10 mrad
+/BeamIn/Focus/Bta0 10 mrad
+
+
+
+/BeamIn/Report
+
+#/run/beamOn 100
