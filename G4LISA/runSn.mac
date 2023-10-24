@@ -9,6 +9,7 @@
 # Initialize kernel
 /run/initialize
 
+
 /BeamIn/A 132
 /BeamIn/Z 50
 /BeamIn/KEu 200 MeV
@@ -28,3 +29,4 @@
 /BeamIn/Report
 
 /run/beamOn 1
+
