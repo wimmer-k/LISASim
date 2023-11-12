@@ -138,6 +138,9 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
   
   auto DiamondSizeXY = 5*mm;
   char name[100];
+
+
+  /*
   auto PCB_thickness = 1.8*mm;
 
   //////PCB_construction///////
@@ -156,7 +159,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
   PCB_board->SetVisAttributes(PCB_vis_attributes);
 
   new G4PVPlacement(0,G4ThreeVector(3.*mm,3.*mm,-20.*mm),PCB_board,"PCB_board",world_logic,false,0) ;
-  
+  */
 
 
 
