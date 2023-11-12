@@ -31,7 +31,17 @@
      */
 DetectorConstruction::DetectorConstruction(){
   // Geometry parameters, to be passed by messenger or settings file
+  f_dim_x = 2;
+  f_dim_y = 2;
   fNofLayers = 5;
+  DiamondSizeXY = 5*mm;
+  PCB_thickness = 1.*mm;
+  f_space_x = 1.*mm ;
+  f_space_y = 1.*mm ;
+  bot_dist = 32*mm ;
+  top_dist = 15*mm ;
+  side_dist = 15*mm ;
+
   fLayerThickness[0] = 0.5*mm;
   fLayerThickness[1] = 0.5*mm;
   fLayerThickness[2] = 0.5*mm;
@@ -140,6 +150,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
   char name[100];
   auto PCB_thickness = 1.8*mm;
 
+  /*
   //////PCB_construction///////
   PCB_box = new G4Box("PCB_box",                //its name
 		      25*mm,32.5*mm,PCB_thickness/2);
@@ -157,7 +168,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
 
   new G4PVPlacement(0,G4ThreeVector(3.*mm,3.*mm,-20.*mm),PCB_board,"PCB_board",world_logic,false,0) ;
   
-
+  */
 
 
 

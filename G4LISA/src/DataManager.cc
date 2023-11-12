@@ -34,6 +34,8 @@ void DataManager::FillTree(EventInfo* info){
   //Clear();
   fsim = info->GetSimEvent();
   flisa = info->GetLISAEvent();
+  //fsim->Print();
+  //flisa->Print();
   ftree->Fill();
 }
 void DataManager::Clear(const Option_t*){
