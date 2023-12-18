@@ -9,9 +9,10 @@ SensitiveDetector::SensitiveDetector(const G4String& name)
 SensitiveDetector::~SensitiveDetector(){;}
 
 void SensitiveDetector::Initialize(G4HCofThisEvent* evnt){
-  //G4cout << __PRETTY_FUNCTION__ << "\t" << HC << "\t"<< name << G4endl;
+  //G4cout << __PRETTY_FUNCTION__ << G4endl;
   static G4int HCID;
   HCID = G4SDManager::GetSDMpointer()->GetCollectionID(SensitiveDetectorName);
+  //cout << HCID << "\t" << SensitiveDetectorName << endl;
   fhitsCollection = new LISAHitsCollection(SensitiveDetectorName,SensitiveDetectorName);
 
   evnt->AddHitsCollection(HCID, fhitsCollection);
@@ -24,13 +25,13 @@ G4bool SensitiveDetector::ProcessHits(G4Step* aStep, G4TouchableHistory*){
 
 
   G4double edep = aStep->GetTotalEnergyDeposit();
-  // G4cout << "edep " << edep;
+  //G4cout << "edep " << edep;
   if(edep==0)
     return true;
 
   LISAHit* newHit = new LISAHit();
 
-   newHit->SetEdep(edep);
+  newHit->SetEdep(edep);
 
   G4StepPoint* stepPoint;
   if(aStep->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName()=="Transportation")
@@ -39,20 +40,20 @@ G4bool SensitiveDetector::ProcessHits(G4Step* aStep, G4TouchableHistory*){
     stepPoint = aStep->GetPostStepPoint();
 
   G4ThreeVector position = stepPoint->GetPosition(); 
-  // G4cout << ", at (" << position.x() << ", " << position.y() << ", " << position.z() << ")";
+  //G4cout << ", at (" << position.x() << ", " << position.y() << ", " << position.z() << ")";
   newHit->SetPos(position);
 
 
   int CollectionID = SDman->GetCollectionID(fhitsCollection);
   // G4cout<<", CollectionID = "<<CollectionID;
   CollectionID -= SDman->GetCollectionID("layer_0");
-  // G4cout<<", LayerID = "<<CollectionID<<G4endl;
+  //G4cout<<", LayerID = "<<CollectionID<<G4endl;
   
   newHit->SetLayerID(CollectionID);
  
   fhitsCollection->insert(newHit);
   
-
+  
   return true;
 }
 
