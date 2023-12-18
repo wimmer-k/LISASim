@@ -4,14 +4,14 @@
 #include "G4RunManager.hh"
 #include "util.hh"
 SteppingAction::SteppingAction(){
-  //G4cout << __PRETTY_FUNCTION__ << G4endl;
+  G4cout << __PRETTY_FUNCTION__ << G4endl;
   feventAction = (EventAction*)G4RunManager::GetRunManager()->GetUserEventAction();
 }
 SteppingAction::~SteppingAction(){ }
 
 
 void SteppingAction::UserSteppingAction(const G4Step* aStep){
-  //G4cout << __PRETTY_FUNCTION__ << G4endl;
+  G4cout << __PRETTY_FUNCTION__ << G4endl;
   if( aStep->GetTrack()->GetDefinition()->GetParticleType() == "electron")
     aStep->GetTrack()->SetTrackStatus(fStopAndKill);
   
