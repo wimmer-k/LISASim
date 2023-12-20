@@ -44,8 +44,10 @@
 #include "EventAction.hh"
 #include "RunAction.hh"
 #include "SteppingAction.hh"
-#include "Incoming_Beam.hh"
-#include "Incoming_Beam_Messenger.hh"
+#include "DetectorConstruction.hh"
+//#include "Beam.hh"
+#include "Beam_Messenger.hh"
+//#include "Detector_Messenger.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -132,6 +134,7 @@ int main(int argc,char** argv)
 
 
   auto detConstruction = new DetectorConstruction();
+  //Detector_Messenger* DetectorMessenger = new Detector_Messenger(detConstruction);
   runManager->SetUserInitialization(detConstruction);
 
  // auto physicsList = new FTFP_BERT;
@@ -145,8 +148,8 @@ int main(int argc,char** argv)
 
   // Construct incoming beam
   cout << "Construct incoming beam" << endl;
-  Incoming_Beam* BeamIn = new Incoming_Beam();
-  Incoming_Beam_Messenger* IncomingBeamMessenger = new Incoming_Beam_Messenger(BeamIn);
+  Beam* BeamIn = new Beam();
+  Beam_Messenger* BeamMessenger = new Beam_Messenger(BeamIn);
 
   // cout << "Primary Generator" << endl;
   // PrimaryGeneratorAction* generatorAction = new PrimaryGeneratorAction(detConstruction,BeamIn,data);

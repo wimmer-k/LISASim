@@ -3,9 +3,9 @@
 #include "RunAction.hh"
 #include "EventAction.hh"
 #include "SteppingAction.hh"
-#include "Incoming_Beam.hh"
+#include "Beam.hh"
 
-ActionInitialization::ActionInitialization(DataManager* data,DetectorConstruction *detector,Incoming_Beam* BI){
+ActionInitialization::ActionInitialization(DataManager* data,DetectorConstruction *detector,Beam* BI){
   fdata = data;
   fdetector = detector;
   fbeamIn = BI ;

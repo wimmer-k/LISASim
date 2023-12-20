@@ -1,3 +1,4 @@
+#include "Randomize.hh"
 #include "PrimaryGeneratorAction.hh"
 
 #include "G4RunManager.hh"
@@ -10,9 +11,8 @@
 #include "G4IonTable.hh"
 #include "G4ParticleDefinition.hh"
 #include "G4SystemOfUnits.hh"
-#include "Randomize.hh"
 
-PrimaryGeneratorAction::PrimaryGeneratorAction(DetectorConstruction *detConstruction, Incoming_Beam* BI,DataManager* data){
+PrimaryGeneratorAction::PrimaryGeneratorAction(DetectorConstruction *detConstruction, Beam* BI,DataManager* data){
   fdetector = detConstruction;
   fbeamIn = BI;
   fdata = data;

@@ -27,15 +27,21 @@ public:
 
   // set
   void SetLayerID(G4int layer_id){ flayerID = layer_id;};
+  void SetXID(G4int x_id){ fxID = x_id;};
+  void SetYID(G4int y_id){ fyID = y_id;};
   void SetEdep(G4double de){ fEdep = de; };
   void SetPos(G4ThreeVector xyz){ fpos = xyz; };
   // get methods
   G4int GetLayerID() const;
+  G4int GetXID() const;
+  G4int GetYID() const;
   G4double GetEdep() const;
   G4ThreeVector GetPosition() const;
 
 private:
   G4int flayerID;
+  G4int fxID;
+  G4int fyID;
   G4double fEdep;       
   G4ThreeVector fpos;  
 };
@@ -62,6 +68,10 @@ inline void LISAHit::operator delete(void *hit){
 }
 
 inline G4int LISAHit::GetLayerID() const {return flayerID;}
+
+inline G4int LISAHit::GetXID() const {return fxID;}
+
+inline G4int LISAHit::GetYID() const {return fyID;}
 
 inline G4double LISAHit::GetEdep() const {return fEdep;}
 

@@ -6,13 +6,13 @@
 
 #include "DetectorConstruction.hh"
 #include "DataManager.hh"
-#include "Incoming_Beam.hh"
+#include "Beam.hh"
 /// Action initialization class.
 
 class ActionInitialization : public G4VUserActionInitialization
 {
 public:
-  ActionInitialization(DataManager*, DetectorConstruction*,Incoming_Beam*);
+  ActionInitialization(DataManager*, DetectorConstruction*,Beam*);
   ~ActionInitialization() override;
 
   void BuildForMaster() const override;
@@ -21,7 +21,7 @@ public:
 private:
   DataManager* fdata;
   DetectorConstruction* fdetector;
-  Incoming_Beam* fbeamIn ;
+  Beam* fbeamIn ;
   
 };
 #endif

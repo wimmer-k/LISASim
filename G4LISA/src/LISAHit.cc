@@ -17,5 +17,6 @@ void LISAHit::Print(){
   G4cout
     << "Edep: "
     << "  energy deposit: " << G4BestUnit(fEdep,"Energy")
+    << "  X: " << fxID << ", Y: " << fyID << ", Z/Layer: " << flayerID
     << "  position: " << G4BestUnit(fpos,"Length") << G4endl;
 }

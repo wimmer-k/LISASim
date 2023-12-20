@@ -12,14 +12,14 @@ void SensitiveDetector::Initialize(G4HCofThisEvent* evnt){
   //G4cout << __PRETTY_FUNCTION__ << G4endl;
   static G4int HCID;
   HCID = G4SDManager::GetSDMpointer()->GetCollectionID(SensitiveDetectorName);
-  //cout << HCID << "\t" << SensitiveDetectorName << endl;
+  cout << HCID << "\t" << SensitiveDetectorName << endl;
   fhitsCollection = new LISAHitsCollection(SensitiveDetectorName,SensitiveDetectorName);
 
   evnt->AddHitsCollection(HCID, fhitsCollection);
 }
 
 G4bool SensitiveDetector::ProcessHits(G4Step* aStep, G4TouchableHistory*){
-  //G4cout << __PRETTY_FUNCTION__ << G4endl;
+  G4cout << __PRETTY_FUNCTION__ << G4endl;
 
   G4SDManager* SDman = G4SDManager::GetSDMpointer();
 
@@ -40,14 +40,14 @@ G4bool SensitiveDetector::ProcessHits(G4Step* aStep, G4TouchableHistory*){
     stepPoint = aStep->GetPostStepPoint();
 
   G4ThreeVector position = stepPoint->GetPosition(); 
-  //G4cout << ", at (" << position.x() << ", " << position.y() << ", " << position.z() << ")";
+  G4cout << ", at (" << position.x() << ", " << position.y() << ", " << position.z() << ")";
   newHit->SetPos(position);
 
 
   int CollectionID = SDman->GetCollectionID(fhitsCollection);
-  // G4cout<<", CollectionID = "<<CollectionID;
+  G4cout<<", CollectionID = "<<CollectionID;
   CollectionID -= SDman->GetCollectionID("layer_0");
-  //G4cout<<", LayerID = "<<CollectionID<<G4endl;
+  G4cout<<", LayerID = "<<CollectionID<<G4endl;
   
   newHit->SetLayerID(CollectionID);
  
