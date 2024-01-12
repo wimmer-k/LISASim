@@ -4,6 +4,8 @@
 #include "G4UserRunAction.hh"
 #include "globals.hh"
 #include "DataManager.hh"
+#include "Incoming_Beam.hh"
+#include "Outgoing_Beam.hh"
 class G4Run;
 
 class RunAction : public G4UserRunAction {
@@ -17,6 +19,7 @@ public:
 private:
   G4String ffilename;
   DataManager* fdata;
+ 
 };
 
 #endif

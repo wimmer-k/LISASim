@@ -24,13 +24,15 @@ G4bool SensitiveDetector::ProcessHits(G4Step* aStep, G4TouchableHistory*){
 
 
   G4double edep = aStep->GetTotalEnergyDeposit();
-  // G4cout << "edep " << edep;
-  if(edep==0)
+  //G4cout << "edep " << edep;
+  if(edep==0){
     return true;
-
+    
+  }
   LISAHit* newHit = new LISAHit();
 
    newHit->SetEdep(edep);
+   //G4cout<<edep<<"EDEPPPPPPPPPPPPPPPPPp"<<G4endl;
 
   G4StepPoint* stepPoint;
   if(aStep->GetPostStepPoint()->GetProcessDefinedStep()->GetProcessName()=="Transportation")
@@ -43,13 +45,39 @@ G4bool SensitiveDetector::ProcessHits(G4Step* aStep, G4TouchableHistory*){
   newHit->SetPos(position);
 
 
-  int CollectionID = SDman->GetCollectionID(fhitsCollection);
-  // G4cout<<", CollectionID = "<<CollectionID;
-  CollectionID -= SDman->GetCollectionID("layer_0");
+
+///////////////nasty string manipulation//////////////////////////////////////
+
+  G4String str = SensitiveDetectorName ;
+  //G4cout<<SensitiveDetectorName<<"   Sens_det_name"<<G4endl;
+
+  char last = str[str.size()-1];
+  char last_2 = str[str.size()-2];
+  char last_3 = str[str.size()-3];
+
+  //G4cout<<str<<"    "<<last_3<<"   "<<last_2<<"  "<<last<<G4endl;
+  
+  // G4int last_3_int = (last_3 - '0') *100 +100 ;
+  // G4int last_2_int = (last_2 - '0') *10 +10 ;
+  // G4int last_int =  (last - '0') *1 +1 ;
+  // G4int Det_No = last_3_int + last_2_int + last_int ;
+  G4int last_3_int = (last_3 - '0');
+  G4int last_2_int = (last_2 - '0');
+  G4int last_int =  (last - '0');
+  //G4cout<<str<<"    "<<last_3_int<<"   "<<last_2_int<<"  "<<last_int<<"   "<<Det_No<<G4endl;
+
+  //G4int CollectionID = SDman->GetCollectionID(fhitsCollection);
+   //G4cout<<", Csddddddddddddddddd = "<<fhitsCollection<<G4endl;
+  //G4cout<<", CollectionID = "<<SensitiveDetectorName<<G4endl;
+  //CollectionID -= SDman->GetCollectionID("layer_0");
   // G4cout<<", LayerID = "<<CollectionID<<G4endl;
   
-  newHit->SetLayerID(CollectionID);
- 
+  //newHit->SetLayerID(CollectionID);
+  newHit->SetLayerID(last_3_int);
+  newHit->SetX(last_int);
+  newHit->SetY(last_2_int);
+  //G4cout<<last_3_int<<"  lastint"<<G4endl; 
+  //newHit->AddEdep(edep);
   fhitsCollection->insert(newHit);
   
 

@@ -35,10 +35,11 @@
 
 #include "G4VModularPhysicsList.hh"
 #include "globals.hh"
+#include "Outgoing_Beam.hh"
 class DetectorConstruction;
 class G4VPhysicsConstructor;
 class PhysicsListMessenger;
-
+class G4VPhysicsConstructor;
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 class PhysicsList: public G4VModularPhysicsList
@@ -48,6 +49,14 @@ public:
  ~PhysicsList() override;
 
   void ConstructParticle() override;
+
+  void SetOutgoingBeam(Outgoing_Beam *BO) {BeamOut = BO;}
+
+  void AddReaction();
+
+  void AddRadioactiveDecay();
+  
+  void AddDecay();
         
   void AddPhysicsList(const G4String& name);
     
@@ -63,6 +72,7 @@ private:
   G4VPhysicsConstructor*  fDecayPhysics;
   G4VPhysicsConstructor*  fHadPhysicsList;
   DetectorConstruction*   fDet;
+  Outgoing_Beam* BeamOut;
 };
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

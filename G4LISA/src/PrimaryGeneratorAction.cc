@@ -9,25 +9,13 @@
 #include "G4ParticleTable.hh"
 #include "G4IonTable.hh"
 #include "G4ParticleDefinition.hh"
-#include "G4SystemOfUnits.hh"
 #include "Randomize.hh"
+#include "G4SystemOfUnits.hh"
 
-PrimaryGeneratorAction::PrimaryGeneratorAction(DetectorConstruction *detConstruction, Incoming_Beam* BI):BeamIn(BI),fdetector(detConstruction)
-
-
-{
-  
-  // n_particle = 1;
-  // fParticleGun = new G4ParticleGun(n_particle);
-
-  // // default particle kinematic
-  
-  // auto particleDefinition
-  //   = G4ParticleTable::GetParticleTable()->FindParticle("e+");
-  // fParticleGun->SetParticleDefinition(particleDefinition);
-  // fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.));
-  // fParticleGun->SetParticleEnergy(100.*MeV);
-   
+PrimaryGeneratorAction::PrimaryGeneratorAction(DetectorConstruction *detConstruction, Incoming_Beam* BI,DataManager* data){
+  fdetector = detConstruction;
+  fbeamIn = BI;
+  fdata = data;
 }
 
 PrimaryGeneratorAction::~PrimaryGeneratorAction(){
@@ -35,6 +23,7 @@ PrimaryGeneratorAction::~PrimaryGeneratorAction(){
 }
 
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent){
+  //G4cout << __PRETTY_FUNCTION__ << G4endl;
   G4double worldZHalfLength = 0.;
   auto worldLV = G4LogicalVolumeStore::GetInstance()->GetVolume("World");
 
@@ -53,15 +42,15 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent){
     msg << "Perhaps you have changed geometry." << G4endl;
     msg << "The gun will be place in the center.";
     G4Exception("PrimaryGeneratorAction::GeneratePrimaries()",
-      "MyCode0002", JustWarning, msg);
+		"MyCode0002", JustWarning, msg);
   }
  
 
 
-   particleTable = G4ParticleTable::GetParticleTable();
-   ionTable = G4IonTable::GetIonTable();
+  particleTable = G4ParticleTable::GetParticleTable();
+  ionTable = G4IonTable::GetIonTable();
 
-	ion =  ionTable->GetIon(BeamIn->getZ(),BeamIn->getA(),BeamIn->getEx());
+  ion =  ionTable->GetIon(fbeamIn->getZ(),fbeamIn->getA(),fbeamIn->getEx());
    
 
   n_particle = 1;
@@ -69,29 +58,32 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent){
 
   // default particle kinematic
   
-  auto particleDefinition
-    = particleTable->FindParticle("e+");
-  fParticleGun->SetParticleDefinition(ion);
-  fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.));
-  fParticleGun->SetParticleEnergy(50000*MeV);
-
-
-
-   G4cout<<BeamIn->getZ()<<G4endl;
-	
-	 position=BeamIn->getPosition();
-	 fParticleGun->SetParticlePosition(position);
-	
-	 direction=BeamIn->getDirection();
-	 fParticleGun->SetParticleMomentumDirection(direction);
-	
-	 KE=BeamIn->getKE(ion);
-	 fParticleGun->SetParticleEnergy(KE);
-
-	// fParticleGun->GeneratePrimaryVertex(anEvent);
-fParticleGun->GeneratePrimaryVertex(anEvent);
+  // auto particleDefinition = particleTable->FindParticle("e+");
+ 
+  // fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.));
+  // fParticleGun->SetParticleEnergy(50000*MeV);
   
+ fParticleGun->SetParticleDefinition(ion);
 
+  //G4cout<<fbeamIn->getZ()<<G4endl;
+	
+  position=fbeamIn->getPosition();
+  fParticleGun->SetParticlePosition(position);
+	
+  direction=fbeamIn->getDirection();
+  fParticleGun->SetParticleMomentumDirection(direction);
+	
+  KE=fbeamIn->getKE(ion);
+  fParticleGun->SetParticleEnergy(KE);
+
+  // fParticleGun->GeneratePrimaryVertex(anEvent);
+  fParticleGun->GeneratePrimaryVertex(anEvent);
+
+
+  SimEvent* sim = fdata->GetSimEvent();
+  sim->SetBeamEnergy(KE);
+  sim->SetIncomingDirection(TVector3(direction.getX(),direction.getY(),direction.getZ()));
+  sim->SetIncomingPosition(TVector3(position.getX(),position.getY(),position.getZ()));
 
   
   

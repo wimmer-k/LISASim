@@ -1,1 +1,1 @@
-#define MAXTARGETS 10
+#define MAXTARGETS 1000

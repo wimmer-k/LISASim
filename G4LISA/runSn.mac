@@ -9,16 +9,18 @@
 # Initialize kernel
 /run/initialize
 
+
+# Beam control
 /BeamIn/A 132
 /BeamIn/Z 50
 /BeamIn/KEu 200 MeV
 /BeamIn/Dpp 0.0
-/BeamIn/Focus/X 0 cm
-/BeamIn/Focus/DX 0 cm
-/BeamIn/Focus/Y 0 cm
-/BeamIn/Focus/DY 0 cm
-/BeamIn/Focus/Z 0 cm
-/BeamIn/Focus/maxAta 0 mrad
+/BeamIn/Focus/X 0. cm
+/BeamIn/Focus/DX 1. cm
+/BeamIn/Focus/Y 2 cm
+/BeamIn/Focus/DY 3. cm
+/BeamIn/Focus/Z 10 cm
+/BeamIn/Focus/maxAta 100 mrad
 /BeamIn/Focus/maxBta 0 mrad
 /BeamIn/Focus/Ata0 0 mrad
 /BeamIn/Focus/Bta0 0 mrad
@@ -27,4 +29,5 @@
 
 /BeamIn/Report
 
-/run/beamOn 1
+/run/beamOn 100000
+

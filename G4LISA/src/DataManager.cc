@@ -31,10 +31,14 @@ void DataManager::Init(){
 }
 void DataManager::FillTree(EventInfo* info){
 
-  Clear();
+  //Clear();
   fsim = info->GetSimEvent();
+  
   flisa = info->GetLISAEvent();
+  //fsim->Print();
+  //flisa->Print();
   ftree->Fill();
+  //G4cout<<"info"<<endl;
 }
 void DataManager::Clear(const Option_t*){
   fsim->Clear();

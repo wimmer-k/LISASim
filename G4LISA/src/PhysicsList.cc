@@ -75,6 +75,13 @@
 #include "G4ShortLivedConstructor.hh"
 #include "G4DNAGenericIonsManager.hh"
 
+
+
+
+
+
+
+
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 PhysicsList::PhysicsList(DetectorConstruction* det) : G4VModularPhysicsList(),
@@ -89,6 +96,9 @@ PhysicsList::PhysicsList(DetectorConstruction* det) : G4VModularPhysicsList(),
 
   // Decay physics  
   fDecayPhysics = new G4DecayPhysics(1);
+
+  BeamOut = NULL;
+
   
   SetDefaultCutValue(1*mm);  
 }
@@ -144,8 +154,10 @@ void PhysicsList::ConstructProcess()
 {
   AddTransportation();
   fEmPhysicsList->ConstructProcess();
-  fDecayPhysics->ConstructProcess();
-  if(fHadPhysicsList) { fHadPhysicsList->ConstructProcess(); }
+  //fDecayPhysics->ConstructProcess();
+  AddReaction();
+  AddRadioactiveDecay();  
+  //if(fHadPhysicsList) { fHadPhysicsList->ConstructProcess(); }
   //AddStepMax();
 }
 
@@ -277,6 +289,75 @@ void PhysicsList::AddPhysicsList(const G4String& name)
     G4cout << "PhysicsList::AddPhysicsList: <" << name << ">"
            << " is not defined"
            << G4endl;
+  }
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+
+#include "G4PhysicsListHelper.hh"
+#include "Reaction.hh"
+#include "G4StepLimiter.hh"
+
+void PhysicsList::AddReaction()
+{
+  
+  G4PhysicsListHelper* ph = G4PhysicsListHelper::GetPhysicsListHelper();
+    
+  Reaction* react = new Reaction(BeamOut);
+
+  auto particleIterator=GetParticleIterator();
+  particleIterator->reset();
+
+  while( (*particleIterator)() ){
+    
+    G4ParticleDefinition* particle = particleIterator->value();
+    G4String particleName = particle->GetParticleName();
+    if ( particleName == "GenericIon" ) {
+      G4cout<<"im generic :/"<<endl;
+      ph->RegisterProcess(react, particle);    
+      ph->RegisterProcess(new G4StepLimiter, particle);
+    }
+  }
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+#include "G4PhysicsListHelper.hh"
+#include "G4RadioactiveDecay.hh"
+#include "G4GenericIon.hh"
+#include "G4NuclideTable.hh"
+
+void PhysicsList::AddRadioactiveDecay()
+{  
+  G4RadioactiveDecay* radioactiveDecay = new G4RadioactiveDecay();
+  
+  radioactiveDecay->SetARM(true);                //Atomic Rearangement
+  
+  G4PhysicsListHelper* ph = G4PhysicsListHelper::GetPhysicsListHelper();  
+  ph->RegisterProcess(radioactiveDecay, G4GenericIon::GenericIon());
+  
+  // mandatory for G4NuclideTable
+  //
+  G4NuclideTable::GetInstance()->SetThresholdOfHalfLife(0.1*picosecond);
+}
+
+//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+#include "G4PhysicsListHelper.hh"
+#include "G4Decay.hh"
+
+void PhysicsList::AddDecay()
+{
+  G4PhysicsListHelper* ph = G4PhysicsListHelper::GetPhysicsListHelper();
+    
+  // Decay Process
+  //
+  G4Decay* fDecayProcess = new G4Decay();
+
+  auto particleIterator=GetParticleIterator();
+  particleIterator->reset();
+  while( (*particleIterator)() ){
+    G4ParticleDefinition* particle = particleIterator->value();
+    if (fDecayProcess->IsApplicable(*particle)) 
+      ph->RegisterProcess(fDecayProcess, particle);    
   }
 }
 

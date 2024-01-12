@@ -154,7 +154,7 @@ G4ThreeVector Incoming_Beam::getDirection()
 
   a=r*cos(phi)*maxAta;
   b=r*sin(phi)*maxBta; 
-  z=1./sqrt(1.+tan(a)*tan(a)+tan(b)*tan(b));
+  z=-1./sqrt(1.+tan(a)*tan(a)+tan(b)*tan(b));
   y=z*tan(b);
   x=z*tan(a);
   direction.setX(x);

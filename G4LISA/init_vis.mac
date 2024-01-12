@@ -3,10 +3,36 @@
 #
 # Set some default verbose
 #
+
+
 /control/verbose 2
 /control/saveHistory
 /run/verbose 2
-#
+
+# geometry control
+
+/DetIn/NLay 7                            # lower than 10
+/DetIn/DimX 5                            # int
+/DetIn/DimY 5                            # int
+/DetIn/SizeXY 5 mm
+/DetIn/PCB_thic 1 mm
+/DetIn/SpaceX 1 mm
+/DetIn/SpaceY 1 mm
+/DetIn/BotDist 32 mm
+/DetIn/TopDist 15 mm
+/DetIn/SideDist 10 mm
+/DetIn/KWRad 10 mm
+/DetIn/KWThic 0.0127 mm
+/DetIn/KWZ 10 mm
+/DetIn/KWSwitch 1                        # int 0 or 1
+/DetIn/KWh 8 mm                          # same as /BeamIn/Focus/Y
+/DetIn/LayThic 0.5 mm
+/DetIn/LayGap 2. mm
+
+
+
+
+
 # Change the default number of threads (in multi-threaded mode)
 /run/numberOfThreads 1
 #
@@ -15,21 +41,24 @@
 #
 # Visualization setting
 /control/execute vis.mac
-/BeamIn/A 132
-/BeamIn/Z 50
-/BeamIn/KEu 20 MeV
+
+
+# Beam control
+/BeamIn/A 238
+/BeamIn/Z 92
+/BeamIn/KEu 1000 MeV
 /BeamIn/Dpp 0.0
-/BeamIn/Focus/X 0 cm
-/BeamIn/Focus/DX 0 cm
-/BeamIn/Focus/Y 0 cm
-/BeamIn/Focus/DY 0 cm
-/BeamIn/Focus/Z -2 cm
-/BeamIn/Focus/maxAta 10 mrad
-/BeamIn/Focus/maxBta 10 mrad
-/BeamIn/Focus/Ata0 10 mrad
-/BeamIn/Focus/Bta0 10 mrad
+/BeamIn/Focus/X 0.0 cm
+/BeamIn/Focus/DX 0.0 cm
+/BeamIn/Focus/Y 0.8 cm
+/BeamIn/Focus/DY 0.0 cm
+/BeamIn/Focus/Z 10 cm
+/BeamIn/Focus/maxAta 40 mrad
+/BeamIn/Focus/maxBta 40 mrad
+/BeamIn/Focus/Ata0 0 mrad
+/BeamIn/Focus/Bta0 0 mrad
 
-
+#/control/execute vis.mac
 
 /BeamIn/Report
 

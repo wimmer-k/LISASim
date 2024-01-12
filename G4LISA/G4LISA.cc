@@ -45,7 +45,9 @@
 #include "RunAction.hh"
 #include "SteppingAction.hh"
 #include "Incoming_Beam.hh"
+#include "Outgoing_Beam.hh"
 #include "Incoming_Beam_Messenger.hh"
+#include "DetectorConstruction_Messenger.hh"
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -126,19 +128,29 @@ int main(int argc,char** argv)
 
   DataManager* data = new DataManager(rootFile);
 
+
+
+
+
+
   // Set mandatory initialization classes
-  //
-
-
-
+  
   auto detConstruction = new DetectorConstruction();
+
+  DetectorConstruction_Messenger* Detector_Messenger = new DetectorConstruction_Messenger(detConstruction);
+
+
+
   runManager->SetUserInitialization(detConstruction);
+
+
+
 
  // auto physicsList = new FTFP_BERT;
   PhysicsList *physicsList = new PhysicsList(detConstruction);
   runManager->SetUserInitialization(physicsList);
 
-  //runManager->SetUserInitialization(new PhysicsList());
+
 
  
 
@@ -148,9 +160,16 @@ int main(int argc,char** argv)
   Incoming_Beam* BeamIn = new Incoming_Beam();
   Incoming_Beam_Messenger* IncomingBeamMessenger = new Incoming_Beam_Messenger(BeamIn);
 
-  cout << "Primary Generator" << endl;
-  PrimaryGeneratorAction* generatorAction = new PrimaryGeneratorAction(detConstruction,BeamIn);
-  cout << "... Done///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////" << endl;
+
+  //Construct outgoing beam
+  Outgoing_Beam* BeamOut = new Outgoing_Beam();
+  BeamOut->defaultIncomingIon(BeamIn);
+  physicsList->SetOutgoingBeam(BeamOut);
+  //cout<<"out_beam"<<endl;
+
+  // cout << "Primary Generator" << endl;
+  // PrimaryGeneratorAction* generatorAction = new PrimaryGeneratorAction(detConstruction,BeamIn,data);
+  // cout << "... Done///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////" << endl;
 
  // User Action classes
   auto actionInitialization = new ActionInitialization(data,detConstruction,BeamIn);
@@ -190,6 +209,11 @@ int main(int argc,char** argv)
 
   delete visManager;
   delete runManager;
+  delete BeamIn;
+  delete IncomingBeamMessenger;
+  delete BeamOut;
+  delete Detector_Messenger;
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo.....
