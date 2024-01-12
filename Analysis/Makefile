@@ -15,12 +15,10 @@ ALLIBS  = -lm $(ROOTLIBS) $(ROOTGLIBS) -L$(LIB_DIR) -lCommandLineInterface -lEve
 
 CPP             = g++
 CFLAGS		= -pedantic -Wall -Wno-long-long -g -O3 $(ROOTCFLAGS) -fPIC
-DFLAGS		= -Wall -Wno-long-long -g -O3 $(ROOTCFLAGS) -fPIC
 CFLAGS		+= -Wl,--no-as-needed
-DFLAGS		+= -Wl,--no-as-needed
 
 INCLUDES        = -I./inc -I$(COMMON_DIR)
-LFLAGS		= -fPIC -O2 -g $(ROOTLDFLAGS)
+LFLAGS		= -fPIC -O2 -g 
 LIBS 		= $(ALLIBS)
 
 USING_ROOT_6 = $(shell expr $(shell root-config --version | cut -f1 -d.) \>= 6)
@@ -31,14 +29,14 @@ endif
 all: EventInfo $(EXTRAS) 
 	echo Done
 
-LISAAna: LISAAna.cc 
+LISAana: LISAana.cc 
 	@echo "Compiling $@"
 	@$(CPP) $(CFLAGS) $(INCLUDES) $^ $(LIBS) -o $@
-	@cp LISAAna $(HOME)/bin
+	@mv LISAana $(HOME)/bin
 
 EventInfo: build/EventInfo.o build/EventInfoDictionary.o 
 	@echo "Compiling $@"
-	$(CPP) $(LFLAGS) -shared -Wl,-soname,libEventInfo.so -o $(LIB_DIR)/libEventInfo.so $^ -lc
+	@$(CPP) $(LFLAGS) -shared -Wl,-soname,libEventInfo.so -o $(LIB_DIR)/libEventInfo.so $^ -lc
 
 build/%.o: src/%.cc inc/%.hh
 	@echo "Compiling $@"
@@ -63,4 +61,4 @@ build/%Dictionary_rdict.pcm: build/%Dictionary.cc
 	@echo "Placing $@"
 	@cp build/$@ $(LIB_DIR)
 clean:
-	rm  -f LISAAna build/*.o build/*Dictionary*
+	rm  -f LISAana build/*.o build/*Dictionary*
