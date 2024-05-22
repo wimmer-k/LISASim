@@ -9,6 +9,7 @@
 #include "globals.h"
 
 
+
 class EventAction : public G4UserEventAction{
 public:
   EventAction(DataManager *fdata);
@@ -18,9 +19,17 @@ public:
   void  EndOfEventAction(const G4Event* event) override;
   const G4Event* GetEvent() { return fevt; }
 
+//getters
+
+G4double    getRGRL(){return RGRL;}
+
+
+
 private:
   const G4Event* fevt; // to communicate with steppingaction
   DataManager* fdata;
+  G4double RGRL ;
+
 };
 
 #endif

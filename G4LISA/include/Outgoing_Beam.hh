@@ -26,7 +26,8 @@ using namespace std;
 #include "Incoming_Beam.hh"
 
 // this is?
-#define  eps 0.00001
+//#define  eps 0.00001
+#define  eps 0.0001
 
 class Outgoing_Beam
 {
@@ -71,7 +72,8 @@ public:
   G4int    GetReactionFlag(){return ReactionFlag;}
   void     SetReactionFlag(G4int f){ReactionFlag=f;}
   G4int    AboveThreshold(){return ThresholdFlag;}
-
+  G4int    GetAin(){return Ain;}
+  G4int    GetDA() {return DA[0] ;}
 private:
   G4int Ain;
   G4int Zin;

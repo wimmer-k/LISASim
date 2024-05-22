@@ -6,7 +6,7 @@
 
 Outgoing_Beam::Outgoing_Beam()
 {
-  Ex=1.0*MeV;
+  Ex=0.0*MeV;
   xsectFileName = "";
   TarEx=0.*keV;
   TarA = 12;
@@ -21,6 +21,7 @@ Outgoing_Beam::Outgoing_Beam()
   theta_bin=0.;
   twopi=8.*atan(1.);
   beamIn = NULL;
+ 
 }
 
 Outgoing_Beam::~Outgoing_Beam()
@@ -48,9 +49,10 @@ void Outgoing_Beam::setDecayProperties()
   Ain = beamIn->getA();
 
   // Load the particle table with ground states
-  G4cout<<"test test test"<<G4endl;
+ 
   G4IonTable* ionTable = G4IonTable::GetIonTable();
   particleTable = G4ParticleTable::GetParticleTable();
+ 
   beam  = ionTable->GetIon(Zin,Ain,0.);
   if(TarA == 1 && TarZ ==1)
     tarIn = particleTable->FindParticle("proton");
@@ -64,7 +66,7 @@ void Outgoing_Beam::setDecayProperties()
     tarIn = particleTable->FindParticle("neutron");
   else
     tarIn = ionTable->GetIon(TarZ,    TarA,    0.);
-
+ 
   if (tarIn == NULL) {
     if(targetExcitation){
       G4cerr << "Error: no target nucleus in particle table "
@@ -112,8 +114,11 @@ void Outgoing_Beam::setDecayProperties()
   }
   
   m1 = beam->GetPDGMass();
+  
   m2 = tarIn->GetPDGMass();
+  //G4cout<<"test test test "<<m2<<G4endl;
   m3 = ionGS[0]->GetPDGMass();
+  
   m4 = tarOutGS[0]->GetPDGMass();
   
   // // Load the particle table with excited states
@@ -156,7 +161,11 @@ void Outgoing_Beam::setDecayProperties()
 //---------------------------------------------------------
 void Outgoing_Beam::ScanInitialConditions(const G4Track & aTrack)
 {
- G4cout<<"hi I am a little scan //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////"<<endl;
+ //G4cout<<"hi I am a little scan ////////////////////////////////////////////////////////////////////////////"<<endl;
+    DZ.push_back(-1);
+    DA.push_back(-1);
+
+   // cout<<DZ.size()<<endl;
   dirIn=aTrack.GetMomentumDirection();
   posIn=aTrack.GetPosition();
   pIn=aTrack.GetMomentum();
@@ -164,18 +173,22 @@ void Outgoing_Beam::ScanInitialConditions(const G4Track & aTrack)
   Ain=aTrack.GetDynamicParticle()->GetDefinition()->GetAtomicMass();
   Zin=aTrack.GetDynamicParticle()->GetDefinition()->GetAtomicNumber();
   ReactionFlag=-1;
-  if(aTrack.GetVolume()->GetLogicalVolume()->GetName()=="target_log")
+  //G4cout<<"AIn  "<<Ain<<" Zin  "<<Zin<<" KEIn  "<<KEIn<<G4endl; 
+  setDecayProperties();
+  //if(aTrack.GetVolume()->GetLogicalVolume()->GetName()=="Diamond_122")
     ReactionFlag=0;
   ThresholdFlag = 1;
+ //G4cout<<m1<<"  "<<m2<<"   "<<m3<<"   "<<m4<<endl;
   if( KEIn < Ex/2/m2*(m1+m2+m3+m4) )
     ThresholdFlag = 0;
   ET = KEIn + m1 + m2;                                      // Total E
   p1 = sqrt( (KEIn + m1)*(KEIn + m1) - m1*m1 );          // Incoming p
+ 
   // Lab-frame scattering angle limit
   sin2theta3_max = 
     ( (ET*ET - p1*p1 + m3*m3 - m4*m4)*(ET*ET - p1*p1 + m3*m3 - m4*m4)
       -4*m3*m3*((m1 + m2)*(m1 + m2) + 2*m2*KEIn) )/( 4*m3*m3*p1*p1 );
-
+ //G4cout<<"ScanInitial conditions finished "<<"sin2theta3_max "<<sin2theta3_max<<endl; 
 }
 
 //---------------------------------------------------------
@@ -193,8 +206,8 @@ G4ThreeVector Outgoing_Beam::ReactionPosition()
 G4DynamicParticle* Outgoing_Beam::ReactionProduct()
 {
 
-  //  G4cout << "Outgoing_Beam::ReactionProduct()" << G4endl;
-    
+  //G4cout << "Outgoing_Beam::ReactionProduct()" << G4endl;
+
   G4int Zout, Aout;
   G4double excitationEnergy = 0.;
   if(targetExcitation){
@@ -202,23 +215,27 @@ G4DynamicParticle* Outgoing_Beam::ReactionProduct()
     Aout = TarA - DA[0];
     excitationEnergy = TarEx;
   } else {
+     
     Zout = Zin + DZ[0];
     Aout = Ain + DA[0];
+   // G4cout<<"ReactionProduct() finished"<<endl; 
     excitationEnergy = Ex;
   }
 
   G4ParticleDefinition* product
     = G4IonTable::GetIonTable()->GetIon(Zout, Aout, excitationEnergy);
 
-    G4cout << "  " << product->GetParticleName() << G4endl;
-    G4cout << "  ex = " << excitationEnergy << G4endl;
+    //G4cout << "  " << product->GetParticleName() << G4endl;
+   // G4cout << "  ex = " << excitationEnergy << G4endl;
   
   G4DynamicParticle* aReactionProduct
     = new G4DynamicParticle(product, GetOutgoingMomentum());
-
-  return aReactionProduct;
+  //G4cout<<"momentum "<<GetOutgoingMomentum().getX()<<G4endl;
+ 
+      DZ.pop_back();
+    DA.pop_back();
+ return aReactionProduct;
 }
-
 //---------------------------------------------------------
 G4ThreeVector Outgoing_Beam::GetOutgoingMomentum()
 {
@@ -232,12 +249,13 @@ G4ThreeVector Outgoing_Beam::GetOutgoingMomentum()
   theta3=GetDTheta();
   // If theta3 is beyond the limit dictated by the kinematics
   // or if an angle cut is specified ...
+  //G4cout<<"theta3 "<<theta3<<endl;
   while( sin(theta3)*sin(theta3) > sin2theta3_max
 	 || (theta3 < theta_min)
 	 || (theta3 > theta_max) ){
     theta3=GetDTheta();
   }
-
+  
   // Relativistic kinematics ===================================================
   //       Baldin et al, Kinematics of Nuclear Reactions, Pergamon (1961)
 
@@ -247,6 +265,7 @@ G4ThreeVector Outgoing_Beam::GetOutgoingMomentum()
 			     *( m2*(KEIn+m1) + (m1*m1+m2*m2-m3*m3-m4*m4)/2. ) 
 			     - m3*m3*m4*m4 
 			     - p1*p1*m3*m3*sin(theta3)*sin(theta3) ) );
+  
 
   G4double p3Lab = sqrt( E3Lab*E3Lab - m3*m3 );
 

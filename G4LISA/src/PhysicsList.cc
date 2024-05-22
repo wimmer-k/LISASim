@@ -88,7 +88,7 @@ PhysicsList::PhysicsList(DetectorConstruction* det) : G4VModularPhysicsList(),
   fHadPhysicsList(nullptr),fDet(det)
 {  
   //fMessenger = new PhysicsListMessenger(this); 
-  SetVerboseLevel(2);
+  SetVerboseLevel(4);
      
   // EM physics !!!!!!!!!!!
   fEmName = G4String("emstandard_opt4");
@@ -98,7 +98,7 @@ PhysicsList::PhysicsList(DetectorConstruction* det) : G4VModularPhysicsList(),
   fDecayPhysics = new G4DecayPhysics(1);
 
   BeamOut = NULL;
-
+  fdata = NULL; 
   
   SetDefaultCutValue(1*mm);  
 }
@@ -303,7 +303,7 @@ void PhysicsList::AddReaction()
   
   G4PhysicsListHelper* ph = G4PhysicsListHelper::GetPhysicsListHelper();
     
-  Reaction* react = new Reaction(BeamOut);
+  Reaction* react = new Reaction(BeamOut, fdata,fDet );
 
   auto particleIterator=GetParticleIterator();
   particleIterator->reset();

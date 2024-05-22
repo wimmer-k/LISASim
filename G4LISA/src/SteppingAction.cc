@@ -1,5 +1,5 @@
 #include "SteppingAction.hh"
-
+#include "G4VProcess.hh"
 #include "G4Step.hh"
 #include "G4RunManager.hh"
 #include "util.hh"
@@ -16,6 +16,9 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep){
   //G4cout << __PRETTY_FUNCTION__ << G4endl;
   if( aStep->GetTrack()->GetDefinition()->GetParticleType() == "electron")
     aStep->GetTrack()->SetTrackStatus(fStopAndKill);
+
+  if( aStep->GetTrack()->GetDefinition()->GetParticleType() == "gamma")
+    aStep->GetTrack()->SetTrackStatus(fStopAndKill);
   
   if( aStep->GetTrack()->GetDefinition()->GetParticleType() == "e-")
     aStep->GetTrack()->SetTrackStatus(fStopAndKill);
@@ -24,7 +27,8 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep){
     aStep->GetTrack()->SetTrackStatus(fStopAndKill);
 
 
-
+ G4VPhysicalVolume* volume10 = aStep->GetPreStepPoint()->GetTouchableHandle()->GetVolume();
+ //G4cout <<volume10->GetName()<<endl;
 
 
 
@@ -36,13 +40,34 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep){
 
 //G4cout <<  aStep -> GetPostStepPoint() -> GetProcessDefinedStep() -> GetProcessName()<<endl;
 
-//if( aStep->GetPostStepPoint()!=nullptr && aStep->GetPreStepPoint()!=nullptr){
-  //G4String a = aStep->GetTrack()->GetCreatorProcess()->GetProcessName();
-  //G4cout<<a<<endl;
-//}
+
+// G4VPhysicalVolume* volume4 = aStep->GetPreStepPoint()->GetTouchableHandle()->GetVolume();
 
 
-  G4VPhysicalVolume* volume4 = aStep->GetPreStepPoint()->GetTouchableHandle()->GetVolume();
+// u_char last_3a = volume4->GetName()[volume4->GetName().size()-3];
+// auto last_3_inta = (last_3a - '0')  ;
+
+
+// //FAILED REACTION LAYER IDENTIFICATION -> TO BE DISCUSSED?????
+
+// // if( aStep->GetTrack()!=nullptr && aStep->GetTrack()->GetCreatorProcess()!=nullptr && (G4StrUtil::contains(volume4->GetName(), "Diamond"))  && ReactionLayer < last_3_inta){
+
+// // G4String procName = aStep->GetTrack()->GetCreatorProcess()->GetProcessName();
+// // if(procName=="Reaction"){ReactionLayer=last_3_inta;
+// // cout<<last_3_inta<<endl;
+
+// // }
+// //cout<<procName<<endl;
+//  //G4cout<< aStep->GetTrack()->GetCreatorProcess()->GetProcessName()<<endl;
+
+//  //G4cout<<"  "<<volume4->GetName()<<G4endl;
+// //G4cout << aStep->GetPreStepPoint()->GetPosition().z()<<G4endl;
+
+ 
+// }
+
+
+  
   //G4cout<<"  "<<volume4->GetName()<<" "<<aStep->GetTotalEnergyDeposit()/CLHEP::keV<<" deposit? "<<aStep->GetTrack()->GetDefinition()->GetParticleType()<<G4endl;
   
 
@@ -76,6 +101,9 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep){
         //G4cout<<eventInfo->GetSimEvent()->GetOutGoingBeta(k)<<endl;
       }
     }
+
+//eventInfo->GetSimEvent()->SetReactionLayer(ReactionLayer);
+
 
 }
 

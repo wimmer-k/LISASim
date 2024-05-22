@@ -12,9 +12,14 @@ public:
   virtual ~SteppingAction();
 
   void UserSteppingAction(const G4Step*);
-    
+
+  
+
 private:
+
+  G4int ReactionLayer = -1 ;
   EventAction*   feventAction;  
+  
   //EventInfo*     feventInfo;
 };
 

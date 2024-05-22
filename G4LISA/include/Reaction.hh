@@ -5,9 +5,10 @@
 #include "G4ios.hh"
 #include "globals.hh"
 #include "G4VProcess.hh"
-//#include "DetectorConstruction.hh"
+#include "DetectorConstruction.hh"
+#include "DataManager.hh"
 #include "Outgoing_Beam.hh"
-//#include "EventInformation.hh"
+#include "EventInfo.hh"
 #include "G4VParticleChange.hh"
 #include "G4ParticleChange.hh"
 #include "G4Track.hh"
@@ -16,7 +17,9 @@
 #include "G4UserLimits.hh"
 #include "G4DynamicParticle.hh"
 #include "G4ParticleTable.hh"
-#define  eps 0.00001
+#include "EventAction.hh"
+//#define  eps 0.00001
+#define  eps 0.0001
 
 class Reaction : public G4VProcess 
 {
@@ -26,7 +29,7 @@ class Reaction : public G4VProcess
    G4bool target_reaction;
    G4bool ground_state;
 
-     Reaction(Outgoing_Beam*, const G4String& processName ="Reaction" );
+     Reaction(Outgoing_Beam*, DataManager*, DetectorConstruction*, const G4String& processName ="Reaction" );
 
      virtual ~Reaction();
 
@@ -77,6 +80,9 @@ class Reaction : public G4VProcess
      Reaction& operator=(const Reaction&){return *this;};
 
   Outgoing_Beam* BeamOut;
+  DataManager* fdata;
+  DetectorConstruction* Det;
+  EventAction*   feventAction; 
 };
 
 #endif

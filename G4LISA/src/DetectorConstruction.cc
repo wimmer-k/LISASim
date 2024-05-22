@@ -27,6 +27,7 @@
 
 #include "DetectorConstruction_Messenger.hh"
 
+
 /**
      * Create a new DetectorConstruction.
      * @brief Default constructor.
@@ -36,15 +37,15 @@ DetectorConstruction::DetectorConstruction(){
   f_dim_x = 2;
   f_dim_y = 2;
   fNofLayers = 5;
-  fLayerThick = 0.5*mm ;
+  fLayerThick = 0.502*mm ;
   fLayerGa  = 2.0*mm ;
-  DiamondSizeXY = 5*mm; 
-  PCB_thickness = 1.*mm;
+  DiamondSizeXY = 4.44*mm; 
+  PCB_thickness = 1.6*mm;
   f_space_x = 1.*mm ;
   f_space_y = 1.*mm ;
-  bot_dist = 32*mm ;
-  top_dist = 15*mm ;
-  side_dist = 10*mm ;
+  bot_dist = 34.4*mm ;
+  top_dist = 20.4*mm ;
+  side_dist = 19.9*mm ;
   KW_radius = 10*mm ;
   KW_thicc = 0.0127*mm ;
   KW_Zdim = 10*mm ; 
@@ -168,6 +169,12 @@ new G4Material("FR4_PCB", density = 1.85*g/cm3, ncomp=2);
 FR4_PCB->AddMaterial(Epoxy, 0.60);
 FR4_PCB->AddMaterial(Glass_Fiber, 0.40);
 
+G4Material* Aluminium =
+new G4Material("Aluminium", density = 2.71*g/cm3, ncomp=1);
+Aluminium->AddElement(elAl, natoms=1);
+
+
+
 
 //constructing "Kapton"  (Invented by the DuPont Corporation in the 1960s)
 
@@ -192,11 +199,16 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
   auto worldSizeZ = 2* m;
 
   // Get materials
+  
   auto defaultMaterial = G4Material::GetMaterial("Galactic");
+
   auto LISAMaterial = G4Material::GetMaterial("Diamond");
+
   auto PCBMaterial = G4Material::GetMaterial("FR4_PCB");
+
   auto KaptonMaterial = G4Material::GetMaterial("Kapton");
 
+  auto DegraderMaterial = G4Material::GetMaterial("Aluminium");
 
   if ( ! defaultMaterial || ! LISAMaterial ) {
     G4ExceptionDescription msg;
@@ -369,6 +381,41 @@ G4LogicalVolume* KW_tube = new G4LogicalVolume(KW_tube_solid,KaptonMaterial, "ka
 //--------------------------- construction of the Kapton window END-----------------------------------
 
 
+
+//--------------------------- construction of the Degrader ----------------------------------------
+
+
+G4VSolid* DegBox_general = new G4Box("general_box",tot_len/2 ,tot_high/2 ,PCB_thickness/2);
+
+G4LogicalVolume* Degrader_box = new G4LogicalVolume(DegBox_general,DegraderMaterial, "kapton_win");
+
+  G4VisAttributes* Degrader_vis_attributes = new G4VisAttributes();
+  Degrader_vis_attributes->SetColor(0.537,0.561,0.62,0.6);
+  Degrader_vis_attributes->SetForceAuxEdgeVisible (true) ;
+  Degrader_vis_attributes->SetForceWireframe (true);
+  Degrader_vis_attributes->SetForceSolid(true);
+
+  Degrader_box->SetVisAttributes(Degrader_vis_attributes);
+
+
+
+
+
+//--------------------------- construction of the Degrader END-----------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //--------------------------- Assembling the detector setup ----------------------------------------
 
 
@@ -406,7 +453,7 @@ G4LogicalVolume* KW_tube = new G4LogicalVolume(KW_tube_solid,KaptonMaterial, "ka
             
               fLayer_logic[mi]->SetVisAttributes(detectorVisAtt);
           #endif
-              //G4cout<<xes[j]<<"   "<<yes[k]<<"  "<<j<<G4endl;
+              G4cout<<xes[j]<<"   "<<yes[k]<<"  "<<j<<"  zet  "<<x<<""  ""<<name<<G4endl;
               fLayer_place[mi] = new G4PVPlacement(0,              
                     G4ThreeVector(xes_new[mi]*mm,yes_new[mi]*mm,-x), //xes and yes are the vectors of the positions of holes in the PCB
                     fLayer_logic[mi],               
@@ -416,10 +463,15 @@ G4LogicalVolume* KW_tube = new G4LogicalVolume(KW_tube_solid,KaptonMaterial, "ka
                     i);                                //copy number
               mi+=1;
    
+   
   }
   }
 
     new G4PVPlacement(0,G4ThreeVector(0.*mm,0.*mm,-x*mm),PCB_general,"plate_general",world_logic,false,0) ;
+    //placement of the degrader (to be passed to the messenger)
+    //if((i+1)!=fNofLayers){
+    //new G4PVPlacement(0,G4ThreeVector(0.*mm,0.*mm,-x*mm -fLayerGap[i]/2 *mm),Degrader_box,"deg_general",world_logic,false,0) ;}
+    fLayerMids.push_back(-x); 
     x += fLayerThickness[i]/2;
     x += fLayerGap[i];
   }

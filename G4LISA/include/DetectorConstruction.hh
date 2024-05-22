@@ -3,7 +3,7 @@
 
 #include "G4VUserDetectorConstruction.hh"
 #include "globals.h"
-
+#include <vector>
 class G4Box;
 class G4LogicalVolume;
 class G4VPhysicalVolume;
@@ -33,6 +33,9 @@ public:
   void SetKW_switch(G4bool);
   void SetKW_h(G4double);
   
+  //setters for the reaction
+
+  void SetLayerMids(std::vector<double>);
 
 
   // get
@@ -53,6 +56,11 @@ public:
   G4double GetKW_Zdim() const {return KW_Zdim;};
   G4bool GetKW_switch() const {return KW_switch;};
   G4double GetKW_h() const {return KW_h;};
+
+  //getters for the reaction
+  std::vector<double> GetLayerMids() const {return fLayerMids;};
+
+
 
   G4VPhysicalVolume* Construct() override;
   void ConstructSDandField() override;
@@ -80,6 +88,11 @@ private:
   G4double fLayerGa = -1 ;
   G4double fLayerThickness[MAXTARGETS];
   G4double fLayerGap[MAXTARGETS];
+
+  std::vector<double> fLayerMids ;
+
+
+
 
   G4Box* fLayer_solid[MAXTARGETS];
   G4LogicalVolume* fLayer_logic[MAXTARGETS];

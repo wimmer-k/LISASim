@@ -36,6 +36,8 @@
 #include "G4VModularPhysicsList.hh"
 #include "globals.hh"
 #include "Outgoing_Beam.hh"
+#include "DataManager.hh"
+
 class DetectorConstruction;
 class G4VPhysicsConstructor;
 class PhysicsListMessenger;
@@ -72,6 +74,7 @@ private:
   G4VPhysicsConstructor*  fDecayPhysics;
   G4VPhysicsConstructor*  fHadPhysicsList;
   DetectorConstruction*   fDet;
+  DataManager* fdata;
   Outgoing_Beam* BeamOut;
 };
 

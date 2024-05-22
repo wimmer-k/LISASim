@@ -7,17 +7,25 @@
 #include "G4HCofThisEvent.hh"
 #include "G4UnitsTable.hh"
 
+
 #include "Randomize.hh"
 EventAction::EventAction(DataManager* data){
   //G4cout << __PRETTY_FUNCTION__ << G4endl;
   fevt = NULL;
   fdata = data;
+  RGRL = 0 ;
 }
 
 EventAction::~EventAction(){}
 
 void EventAction::BeginOfEventAction(const G4Event* event){
   //G4cout << __PRETTY_FUNCTION__ << G4endl;
+
+//random number generation for the reaction layer
+ CLHEP::HepRandom::setTheSeed((unsigned)clock());
+ RGRL = G4UniformRand();
+ 
+
   fevt = event;
   EventInfo* eventInfo = new EventInfo();
   //cout << "fdata->GetSimEvent()->GetBeamEnergy() " << fdata->GetSimEvent()->GetBeamEnergy() << endl;
@@ -65,6 +73,7 @@ void EventAction::EndOfEventAction(const G4Event* event){
   fevt = event;
   EventInfo* eventInfo = (EventInfo*)fevt->GetUserInformation();
   eventInfo->GetSimEvent()->SetEventID(fevt->GetEventID());
+  //cout << "event number " << eventInfo->GetSimEvent()->GetEventID()  <<endl;
   //cout << "eventInfo->GetSimEvent()->GetBeamEnergy() " << eventInfo->GetSimEvent()->GetBeamEnergy() << endl;
   //cout << "event number " << eventInfo->GetSimEvent()->GetEventID()  << " with " <<  eventInfo->GetSimEvent()->GetNLayers() << " targets " << endl;
   G4HCofThisEvent * HCE = event->GetHCofThisEvent();
@@ -110,6 +119,8 @@ void EventAction::EndOfEventAction(const G4Event* event){
   }// layers
 
   //eventInfo->GetLISAEvent()->Print("");
+
+
   
   fdata->FillTree(eventInfo);
   //G4cout<<"treeFeeling"<<endl;

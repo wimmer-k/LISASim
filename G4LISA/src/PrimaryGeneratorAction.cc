@@ -82,6 +82,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent){
 
   SimEvent* sim = fdata->GetSimEvent();
   sim->SetBeamEnergy(KE);
+  
   sim->SetIncomingDirection(TVector3(direction.getX(),direction.getY(),direction.getZ()));
   sim->SetIncomingPosition(TVector3(position.getX(),position.getY(),position.getZ()));
 

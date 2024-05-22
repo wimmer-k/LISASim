@@ -1,7 +1,9 @@
 #include "Reaction.hh"
+#include "G4RunManager.hh"
 
-Reaction::Reaction(Outgoing_Beam* BO, const G4String& aName)
-  : G4VProcess(aName), BeamOut(BO)
+
+Reaction::Reaction(Outgoing_Beam* BO,  DataManager* data, DetectorConstruction* det, const G4String& aName)
+  : G4VProcess(aName), BeamOut(BO), fdata(data), Det(det)
 {
  
   G4cout <<GetProcessName() << "  is created "<< G4endl;
@@ -30,48 +32,54 @@ G4VParticleChange* Reaction::PostStepDoIt(
 			    )
 {
 
-   G4cout << "I'm in PostStepDoIt." << G4endl;
-   G4cout << "  " 
-   	 << aTrack.GetDynamicParticle()->GetParticleDefinition()->GetParticleName()
-   	 << G4endl;
-   G4cout << "  reaction_here: " 
-   	 << reaction_here
-   	 << G4endl;
-   G4cout << "  ground_state: " 
-   	 << ground_state
-   	 << G4endl;
+  //  G4cout << "I'm in PostStepDoIt." << G4endl;
+  //  G4cout << "  " 
+  //  	 << aTrack.GetDynamicParticle()->GetParticleDefinition()->GetParticleName()
+  //  	 << G4endl;
+  //  G4cout << "  reaction_here: " 
+  //  	 << reaction_here
+  //  	 << G4endl;
+  //  G4cout << "  ground_state: " 
+  //  	 << ground_state
+  //  	 << G4endl;
 
   aParticleChange.Initialize(aTrack);
-
-  if(reaction_here)
+//G4cout<<"Legia2"<<endl;
+ if(reaction_here)
+ 
     {
       reaction_here=false;
-
+    if(false){}
       // Kill the track if we've already reacted and wandered back
-      if(BeamOut->GetReactionFlag() == 1){
+      //if(BeamOut->GetReactionFlag() == 1){
+           //reaction_here=false;
+         
 
-	aParticleChange.ProposeTrackStatus(fStopAndKill);
+	//aParticleChange.ProposeTrackStatus(fStopAndKill);
 
 	// G4cout << "************************* PostStepDoIt: terminating track in "
 	//        << aStep.GetPreStepPoint()->GetTouchableHandle()->GetVolume()->GetName()
 	//        << " at reaction depth"
 	//        << G4endl;
        
-      } 
+      //} 
       // React!
       else {
 
-	//	G4cout << "*** PostStepDoIt: I'm reacting." << G4endl;
+		//G4cout << "*** PostStepDoIt: I'm reacting." << G4endl;
 	
 	BeamOut->ScanInitialConditions(aTrack);
 
 	aParticleChange.ProposeTrackStatus(fStopAndKill);
-
+  //G4cout<<"stopandkilltest"<<endl;
+  
 	if(BeamOut->AboveThreshold()){
 	  aParticleChange.SetNumberOfSecondaries(1);
+   
 	  G4DynamicParticle* rp = BeamOut->ReactionProduct();
+     //G4cout<<"reaction test"<<endl;
 	  G4ThreeVector rm = BeamOut->ReactionPosition();
-	  G4cout << rp->GetMomentum().mag()/rp->GetTotalEnergy() << "\t" << rm.z() << G4endl;
+	  //G4cout << rp->GetMomentum().mag()/rp->GetTotalEnergy() << "\t" << rm.z() << G4endl;
 	  aParticleChange.AddSecondary(rp,rm,true);
 	}
 
@@ -84,7 +92,7 @@ G4VParticleChange* Reaction::PostStepDoIt(
   // Stop and kill the reaction product in its ground state.
   if(ground_state){
     ground_state = false;
-    aParticleChange.ProposeTrackStatus(fStopAndKill);
+    //aParticleChange.ProposeTrackStatus(fStopAndKill);
 
     // G4cout << "************************* PostStepDoIt: terminating track in "
     // 	   << aStep.GetPreStepPoint()->GetTouchableHandle()->GetVolume()->GetName()
@@ -104,55 +112,118 @@ G4double Reaction::PostStepGetPhysicalInteractionLength(
                             )
 {
 
-  // G4cout << "I'm in PostStepGPIL." << G4endl;
-  // G4cout << "  " 
-  // 	 << aTrack.GetDynamicParticle()->GetParticleDefinition()->GetParticleName()
+  //  G4cout << "I'm in PostStepGPIL." << G4endl;
+  //  G4cout << "  " 
+  //  	 << aTrack.GetDynamicParticle()->GetParticleDefinition()->GetParticleName()
   // 	 << G4endl;
-  // G4cout << "  momentum: " 
-  // 	 << aTrack.GetDynamicParticle()->GetMomentum()
-  // 	 << G4endl;
-  // G4cout << "  target_reaction: " 
-  // 	 << target_reaction
-  // 	 << G4endl;
+  //  G4cout << "  momentum: " 
+  //  	 << aTrack.GetDynamicParticle()->GetMomentum()
+  //  	 << G4endl;
+  //  G4cout << "  target_reaction: " 
+  //  	 << target_reaction
+  //  	 << G4endl;
 
   reaction_here=false;
   *condition=NotForced;
 
+
   G4String name=aTrack.GetVolume()->GetLogicalVolume()->GetName();
+
+  //int NStep = 10;
+  //G4double Target_thickness = 0.5;
+  //G4double depth = Target_thickness/2. ;
+  //G4double depth = 2.75 ;
+
+  G4UserLimits* target_limits= new G4UserLimits();
+ 
+  //target_limits->SetMaxAllowedStep(Target_thickness/NStep);
+ // target_limits->SetMaxAllowedStep(1000);
+  //target_limits->SetUserMinRange(depth);
+  //target_limits->SetUserMinRange(5);
+  aTrack.GetVolume()->GetLogicalVolume()->SetUserLimits(target_limits);
+
+
+
+////////////////TEMPORARY RANDOM GENERATION/////////////////////
+
+feventAction = (EventAction*)G4RunManager::GetRunManager()->GetUserEventAction();
+EventInfo* eventInfo = (EventInfo*)feventAction->GetEvent()->GetUserInformation();
+G4double r = feventAction->getRGRL();
+  //G4double r= G4UniformRand();
+  //cout<<r<<endl;
+  G4int EventNo = G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID();
+ 
+//Det is detector construction instance
+std::vector<double> Mids = Det->GetLayerMids();
+ G4double NLayers = Mids.size();
+ G4int RLayer = -1;
+
+for(int i=1;i<=NLayers;i++){
+    if(r>(1/NLayers*(i-1))&&r<=(1/NLayers*i)){RLayer = i-1 ;}
+//cout<<r<<"    "<<NLayers<<"  "<<1./NLayers*(i-1.)<<"   "<<1./NLayers*i<<endl;
+
+}
+
+//cout<<RLayer<<"       RLAYER"<<endl;
+eventInfo->GetSimEvent()->SetReactionLayer(RLayer);
+
+  
   G4UserLimits* pUserLimits
     = aTrack.GetVolume()->GetLogicalVolume()->GetUserLimits();
 
-  if(name=="Target_log"){
+  if(G4StrUtil::contains(name, "Diamond")){
+
+     //G4cout<<aTrack.GetDynamicParticle()->GetParticleDefinition()->GetParticleName()<<" particle name"<<endl;
+   // G4cout<<BeamOut->GetAin()<<endl;
+    std::string s = std::to_string(BeamOut->GetAin());
+    if(aTrack.GetDynamicParticle()->GetParticleDefinition()->GetParticleName().contains(s)){
+
+      //cout<<"contain !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"<<endl;
+
+
+    }
+   //G4cout<< aTrack.GetDynamicParticle()->GetParticleDefinition()->GetParticleName()<<endl;
+   
       
-    // Target excitations:
-    // Stop and kill the decay product once it reaches its ground state.
+    //Target excitations:
+    //Stop and kill the decay product once it reaches its ground state.
+   
     if( target_reaction &&
-	!aTrack.GetDynamicParticle()->GetParticleDefinition()->GetParticleName().contains('[') ){
-      ground_state = true;
+	 !aTrack.GetDynamicParticle()->GetParticleDefinition()->GetParticleName().contains('[') ){
+       ground_state = true;
       target_reaction = false;  //Reset for next decay
       return 0;
-    }
-
-    G4double ZReaction=pUserLimits->GetUserMinRange(aTrack);
+     }
+  
+    //G4double ZReaction=pUserLimits->GetUserMinRange(aTrack)*(-1);
+    G4double ZReaction= Mids[RLayer];
+    //G4double ZReaction= -7.75;
+    //cout<<Mids[RLayer]<<endl;
+    //G4cout<<"Reaction should be in Layer  "<<RLayer<<endl;
     G4double ZCurrent=aTrack.GetPosition().getZ();
-    G4double Z=ZReaction-ZCurrent;
-    if(Z<0){
-      // G4cout<<" Past the reaction point"<<G4endl;
-      // G4cout<<" Volume "<<name<<G4endl;
-      // G4cout<<" Z[mm]: reaction "<<ZReaction/mm<<" current "<<ZCurrent/mm<<" DZ "<<Z/mm<<G4endl;
+    G4double Z=(ZReaction-ZCurrent);
+      if(Z>0){
+      //if(Z<0 ){
+      //  G4cout<<" Past the reaction point"<<G4endl;
+      //  G4cout<<" Volume "<<name<<G4endl;
+      //  G4cout<<" Z[mm]: reaction "<<ZReaction/mm<<" current "<<ZCurrent/mm<<" DZ "<<Z/mm<<G4endl;
+
       return DBL_MAX;
-    } else if(Z>eps) {
+      //return dir.mag();
+    } else if(abs(Z)>eps ) {
       G4ThreeVector dir=aTrack.GetDynamicParticle()->GetMomentumDirection();
       
       dir*=(ZReaction-ZCurrent);
-      // G4cout<<" Before the reaction point"<<G4endl;
-      // G4cout<<" Volume "<<name<<G4endl;
-      // G4cout<<" Z[mm]: reaction "<<ZReaction/mm<<" current "<<ZCurrent/mm<<" DZ "<<Z/mm<<G4endl;
+      //  G4cout<<" Before the reaction point"<<G4endl;
+      //  G4cout<<" Volume "<<name<<G4endl;
+      //  G4cout<<" Z[mm]: reaction "<<ZReaction/mm<<" current "<<ZCurrent/mm<<" DZ "<<Z/mm<<G4endl;
+       reaction_here=false;
       return dir.mag();
-    } else if(Z<eps) {
-      // G4cout<<" At the reaction point"<<G4endl;
-      // G4cout<<" Volume "<<name<<G4endl;
-      // G4cout<<" Z[mm]: reaction "<<ZReaction/mm<<" current "<<ZCurrent/mm<<" DZ "<<Z/mm<<G4endl;
+    } else if( (abs(Z)<eps && BeamOut->GetAin()==0) ||(abs(Z)<eps && aTrack.GetDynamicParticle()->GetParticleDefinition()->GetParticleName().contains(s))) {
+      
+       // G4cout<<" At the reaction point"<<G4endl;
+      //  G4cout<<" Volume "<<name<<G4endl;
+      //  G4cout<<" Z[mm]: reaction "<<ZReaction/mm<<" current "<<ZCurrent/mm<<" DZ "<<Z/mm<<G4endl;
 
       reaction_here = true;
       if( BeamOut->TargetExcitation() ) 
@@ -160,6 +231,10 @@ G4double Reaction::PostStepGetPhysicalInteractionLength(
       return 0.;
     }
       
+
+
+
+
   }
     
   return DBL_MAX;
@@ -176,7 +251,7 @@ G4VParticleChange* Reaction::AtRestDoIt(
 			    )
 {
 
-  // G4cout << "I'm in AtRestDoIt." << G4endl;
+   G4cout << "I'm in AtRestDoIt." << G4endl;
   // G4cout << "  " 
   // 	 << aTrack.GetDynamicParticle()->GetParticleDefinition()->GetParticleName()
   // 	 << G4endl;
@@ -185,11 +260,11 @@ G4VParticleChange* Reaction::AtRestDoIt(
     
   if( !aTrack.GetDynamicParticle()->GetParticleDefinition()->GetParticleName().contains('[') ) { 
 
-     G4cout << "************************* AtRestDoIt: terminating track in "
+     //G4cout << "************************* AtRestDoIt: terminating track in "
      	   //<< aStep.GetPreStepPoint()->GetTouchableHandle()->GetVolume()->GetName()
-    	   << G4endl;
+    	   //<< G4endl;
 
-    aParticleChange.ProposeTrackStatus(fStopAndKill);
+    //aParticleChange.ProposeTrackStatus(fStopAndKill);
 
   }
 
