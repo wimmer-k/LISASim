@@ -88,6 +88,7 @@ public:
   void SetOutGoingBeta(int n,double beta){fbetas[n] = beta;}
 
   void SetReactionPosition(TVector3 pos){freacpos = pos;}
+  void SetReactionLayer(int fL){fReactionLayer = fL;}
   
   // getters
   Int_t GetEventID(){return feventID;}
@@ -102,6 +103,9 @@ public:
   double GetOutGoingBeta(int n){return fbetas[n];}
   
   TVector3 GetReactionPosition(){return freacpos;}
+  int GetReactionLayer(){return fReactionLayer;}
+
+
   void Print(Option_t * ="") const override {
     cout << "event ID = " << feventID << ", NLayers = " << fbetas.size() << endl;
   } 
@@ -113,7 +117,8 @@ protected:
   double fEbeam;
   TVector3 foutdir;
   TVector3 foutpos;
-  
+
+  int fReactionLayer;
 
   vector<double> fbetas;
   
