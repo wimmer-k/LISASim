@@ -62,6 +62,7 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent){
  
   // fParticleGun->SetParticleMomentumDirection(G4ThreeVector(0.,0.,1.));
   // fParticleGun->SetParticleEnergy(50000*MeV);
+
   
  fParticleGun->SetParticleDefinition(ion);
 
