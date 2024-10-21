@@ -40,9 +40,9 @@
 
 
 # Beam control
-/BeamIn/A 238
-/BeamIn/Z 92
-/BeamIn/KEu 796 MeV
+/BeamIn/A 56
+/BeamIn/Z 26
+/BeamIn/KEu 300 MeV
 /BeamIn/Dpp 0.0
 /BeamIn/Focus/X 0 cm
 /BeamIn/Focus/DX 0.0 cm

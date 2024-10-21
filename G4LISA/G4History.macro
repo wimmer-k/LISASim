@@ -12,7 +12,7 @@
 /DetIn/KWRad 10 mm
 /DetIn/KWThic 0.0127 mm
 /DetIn/KWZ 10 mm
-/DetIn/KWSwitch 1
+/DetIn/KWSwitch 0
 /DetIn/KWh 8 mm
 /DetIn/LayThic 0.5 mm
 /DetIn/LayGap 7. mm
@@ -50,13 +50,13 @@
 /BeamIn/Z 92
 /BeamIn/KEu 796 MeV
 /BeamIn/Dpp 0.0
-/BeamIn/Focus/X 0 cm
+/BeamIn/Focus/X -0.3 cm
 /BeamIn/Focus/DX 0.0 cm
-/BeamIn/Focus/Y 0.8 cm
+/BeamIn/Focus/Y 0.9 cm
 /BeamIn/Focus/DY 0.0 cm
 /BeamIn/Focus/Z 10 cm
-/BeamIn/Focus/maxAta 30 mrad
-/BeamIn/Focus/maxBta 30 mrad
+/BeamIn/Focus/maxAta 100 mrad
+/BeamIn/Focus/maxBta 0 mrad
 /BeamIn/Focus/Ata0 0 mrad
 /BeamIn/Focus/Bta0 0 mrad
 /BeamIn/Report
@@ -83,4 +83,4 @@
 /gui/addButton viewer "Flush viewer (= refresh + update)" "/vis/viewer/flush"
 /gui/addButton viewer "Update scene" "/vis/scene/notifyHandlers"
 /run/printProgress 100
-/run/beamOn 100
+/run/beamOn 1

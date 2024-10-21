@@ -29,13 +29,13 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep){
 
  G4VPhysicalVolume* volume10 = aStep->GetPreStepPoint()->GetTouchableHandle()->GetVolume();
  //G4cout <<volume10->GetName()<<endl;
-
+ 
 
 
   
-  //if(aStep->GetPostStepPoint()->GetStepStatus() != fWorldBoundary){
+  if(aStep->GetPostStepPoint()->GetStepStatus() != fWorldBoundary){
     //G4cout << aStep->GetTrack()->GetDefinition()->GetParticleType() <<" " << aStep->GetTrack()->GetDefinition()->GetPDGMass() <<" " << aStep->GetTrack()->GetParentID() << " " << aStep->GetPostStepPoint()->GetStepStatus() << " " << aStep->GetPreStepPoint()->GetTouchableHandle()->GetVolume()->GetName() << " " << aStep->GetPostStepPoint()->GetTouchableHandle()->GetVolume()->GetName() << " " << aStep->GetTrack()->GetParentID() << G4endl;
-  //}
+  }
 
 
 //G4cout <<  aStep -> GetPostStepPoint() -> GetProcessDefinedStep() -> GetProcessName()<<endl;
@@ -67,11 +67,43 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep){
 // }
 
 
+
+  EventInfo* eventInfo = (EventInfo*)feventAction->GetEvent()->GetUserInformation();
+
+TVector3 ReactionPosition ;
+//std::vector<double> ReactionPosition; 
+G4ThreeVector deltaPosition = aStep ->GetDeltaPosition();
+
+if(deltaPosition[0]==0){
+ 
+  //G4cout<<aStep->GetPreStepPoint()->GetPosition().x()<<"    "<<aStep->GetPreStepPoint()->GetPosition().y()<<"     "<<aStep->GetPreStepPoint()->GetPosition().z()<<endl;
+  //cout<<"test"<<endl;
+  ReactionPosition.SetX(aStep->GetPreStepPoint()->GetPosition().x()) ;
+  ReactionPosition.SetY(aStep->GetPreStepPoint()->GetPosition().y()) ;
+  ReactionPosition.SetZ(aStep->GetPreStepPoint()->GetPosition().z()) ;
+  eventInfo->GetSimEvent()->SetReactionPosition(ReactionPosition);
+//cout<<eventInfo->GetSimEvent()->GetReactionPosition()[0]<<endl;
+}
+//G4cout<<deltaPosition[0]<<"     "<<deltaPosition[1]<<"       "<<deltaPosition[2]<<"  "<<endl;
+if( aStep->GetTrack()!=nullptr && aStep->GetTrack()->GetCreatorProcess()!=nullptr){
+G4String procName = aStep->GetTrack()->GetCreatorProcess()->GetProcessName();
+ if(procName=="Reaction"){
+ //cout<<"REACTIONSSSSS"<<endl;
+
+ }
+}
+
   
   //G4cout<<"  "<<volume4->GetName()<<" "<<aStep->GetTotalEnergyDeposit()/CLHEP::keV<<" deposit? "<<aStep->GetTrack()->GetDefinition()->GetParticleType()<<G4endl;
   
 
-   EventInfo* eventInfo = (EventInfo*)feventAction->GetEvent()->GetUserInformation();
+ 
+   
+  
+ //G4cout <<  aStep -> GetPostStepPoint() -> GetProcessDefinedStep() -> GetProcessName()<<endl;
+
+
+
     if( aStep->GetTrack()->GetDefinition()->GetParticleType() == "nucleus" && aStep->GetPostStepPoint()->GetStepStatus() != fWorldBoundary ){
   //    // get initial and final volumes of the current step
       G4VPhysicalVolume* volume1 = aStep->GetPreStepPoint()->GetTouchableHandle()->GetVolume();
@@ -94,11 +126,13 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep){
         G4ThreeVector pDir = aStep->GetTrack()->GetMomentumDirection();
         //G4cout << "going out of target number " << k << " with velocity " << aStep->GetTrack()->GetStep()->GetPostStepPoint()->GetBeta() << G4endl;
         //G4cout<<k<<endl;
-        //eventInfo->GetSimEvent()->SetNLayers(1000);
-        eventInfo->GetSimEvent()->SetOutGoingBeta(100,aStep->GetTrack()->GetStep()->GetPostStepPoint()->GetBeta());
         
-        //G4cout<<eventInfo->GetSimEvent()->GetNLayers()<<endl;
-        //G4cout<<eventInfo->GetSimEvent()->GetOutGoingBeta(k)<<endl;
+        int last_3_int_int = (last_3 - '0') *1 +0 ; ; 
+        eventInfo->GetSimEvent()->SetOutGoingBeta(last_3_int_int,aStep->GetTrack()->GetStep()->GetPostStepPoint()->GetBeta());
+        
+        
+        //G4cout<<aStep->GetTrack()->GetStep()->GetPostStepPoint()->GetBeta()<<endl;
+        //G4cout<<last_3_int_int<<"     "<<eventInfo->GetSimEvent()->GetOutGoingBeta(last_3_int_int)<<endl;
       }
     }
 

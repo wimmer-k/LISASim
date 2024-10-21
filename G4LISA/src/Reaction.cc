@@ -149,29 +149,39 @@ G4double Reaction::PostStepGetPhysicalInteractionLength(
 feventAction = (EventAction*)G4RunManager::GetRunManager()->GetUserEventAction();
 EventInfo* eventInfo = (EventInfo*)feventAction->GetEvent()->GetUserInformation();
 G4double r = feventAction->getRGRL();
+G4double r2 = feventAction->getRGRL2();
+ CLHEP::HepRandom::setTheSeed((unsigned)clock());
+  //double rand = G4UniformRand();
   //G4double r= G4UniformRand();
-  //cout<<r<<endl;
+ 
   G4int EventNo = G4RunManager::GetRunManager()->GetCurrentEvent()->GetEventID();
  
 //Det is detector construction instance
 std::vector<double> Mids = Det->GetLayerMids();
  G4double NLayers = Mids.size();
  G4int RLayer = -1;
-
-for(int i=1;i<=NLayers;i++){
-    if(r>(1/NLayers*(i-1))&&r<=(1/NLayers*i)){RLayer = i-1 ;}
+//cout<<eventInfo->GetSimEvent()->GetReactionLayer()<<endl;
+if(eventInfo->GetSimEvent()->GetReactionLayer() <0){ eventInfo->GetSimEvent()->SetReactionLayer(RLayer); } 
+//cout<<eventInfo->GetSimEvent()->GetReactionLayer()<<endl;
 //cout<<r<<"    "<<NLayers<<"  "<<1./NLayers*(i-1.)<<"   "<<1./NLayers*i<<endl;
 
-}
+
 
 //cout<<RLayer<<"       RLAYER"<<endl;
-eventInfo->GetSimEvent()->SetReactionLayer(RLayer);
+
 
   
   G4UserLimits* pUserLimits
     = aTrack.GetVolume()->GetLogicalVolume()->GetUserLimits();
-
+    //cout<<name<<endl;
   if(G4StrUtil::contains(name, "Diamond")){
+
+      for(int i=1;i<=NLayers;i++){
+        if(r>(1/NLayers*(i-1))&&r<=(1/NLayers*i)){RLayer = i-1 ;}
+        }
+      
+     
+
 
      //G4cout<<aTrack.GetDynamicParticle()->GetParticleDefinition()->GetParticleName()<<" particle name"<<endl;
    // G4cout<<BeamOut->GetAin()<<endl;
@@ -196,10 +206,21 @@ eventInfo->GetSimEvent()->SetReactionLayer(RLayer);
      }
   
     //G4double ZReaction=pUserLimits->GetUserMinRange(aTrack)*(-1);
-    G4double ZReaction= Mids[RLayer];
+
+    // REACTION CAN HAPPPEN IN THE WHOLE VOLUME OF THE DIAMOND, NOT ONLY IN THE MITTEL
+
+    G4double thic = Det->GetLayerThickness(RLayer) ; 
+    //cout<<r<<"    "<<thic<<"   "<<RLayer<<endl;
+    G4double ZReaction= (Mids[RLayer]+ (r2*thic - 0.5*thic));
+
+    //cout<<r*thic - 0.5*thic<<endl;
+    //cout<<ZReaction<<"   ZReaction"<<endl;
     //G4double ZReaction= -7.75;
     //cout<<Mids[RLayer]<<endl;
     //G4cout<<"Reaction should be in Layer  "<<RLayer<<endl;
+
+
+
     G4double ZCurrent=aTrack.GetPosition().getZ();
     G4double Z=(ZReaction-ZCurrent);
       if(Z>0){
@@ -224,7 +245,9 @@ eventInfo->GetSimEvent()->SetReactionLayer(RLayer);
        // G4cout<<" At the reaction point"<<G4endl;
       //  G4cout<<" Volume "<<name<<G4endl;
       //  G4cout<<" Z[mm]: reaction "<<ZReaction/mm<<" current "<<ZCurrent/mm<<" DZ "<<Z/mm<<G4endl;
-
+      //cout<<RLayer<<endl;
+       eventInfo->GetSimEvent()->SetReactionLayer(RLayer);  
+       //cout<<ZReaction<<endl;
       reaction_here = true;
       if( BeamOut->TargetExcitation() ) 
 	target_reaction = true;
@@ -237,6 +260,12 @@ eventInfo->GetSimEvent()->SetReactionLayer(RLayer);
 
   }
     
+
+
+  //G4cout<<RLayer<<endl;
+
+ 
+  
   return DBL_MAX;
 }
 

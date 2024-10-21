@@ -204,8 +204,9 @@ G4double Incoming_Beam::getKE(G4ParticleDefinition *ion)
 
   dynamic=G4DynamicParticle(ion,momentum_vector,ke);
   momentum=dynamic.GetTotalMomentum();
-  rand=G4UniformRand()-0.5;
-  momentum*=(1+rand*Dpp);
+  //rand=G4UniformRand()-0.5;
+  //momentum*=(1+rand*Dpp);
+  momentum = G4RandGauss::shoot(momentum,Dpp*momentum);
   momentum_vector.setMag(momentum);
   //  dynamic.SetMomentum(momentum); //LR (Change to CLHEP library Hep3Vector)
   dynamic.SetMomentum(momentum_vector);

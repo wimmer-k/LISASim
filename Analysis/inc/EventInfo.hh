@@ -35,9 +35,8 @@ public:
   void SetX(vector<int> x){fX=x;}
   void SetY(vector<int> y){fY=y;}
 
-  int GetNLayers(){return fID.size();}
-  int GetDimX(){return fX.size();}
-  int GetDimY(){return fY.size();}
+
+
   vector<double> GetEnergyDetected(){return fEdet;}
   double GetEnergyDetected(int i){return fEdet[i];}
   vector<int> GetLayers(){return fID;}
@@ -54,6 +53,7 @@ protected:
   vector<int> fID;
   vector<int> fX ;
   vector<int> fY ;
+
   ClassDefOverride(LISAEvent, 1);
 };
 
@@ -73,9 +73,10 @@ public:
     
     fbetas.clear();
     freacpos.SetXYZ(-10,0,0);
+    //freacpos.clear();
   }
   // setters
-  void SetNLayers(int n){fbetas.resize(n);}
+  void SetNDiamonds(){}
   void SetEventID(int n){feventID = n;}
 
   void SetIncomingDirection(TVector3 dir){fincdir = dir;}
@@ -88,11 +89,17 @@ public:
   void SetOutGoingBeta(int n,double beta){fbetas[n] = beta;}
 
   void SetReactionPosition(TVector3 pos){freacpos = pos;}
+
+  void SetDimX (int dx){DimX=dx;}
+  void SetDimY (int dy){DimY=dy;}
+  void SetNLayers (int dL){NLayers=dL; fbetas.resize(dL);}
+
+
   void SetReactionLayer(int fL){fReactionLayer = fL;}
   
   // getters
   Int_t GetEventID(){return feventID;}
-  UShort_t GetNLayers(){return fbetas.size();}
+  UShort_t GetNDiamonds(){return DimX*DimY*NLayers;}
   TVector3 GetIncomingDirection(){return fincdir;}
   TVector3 GetIncomingPosition(){return fincpos;}
   double GetBeamEnergy(){return fEbeam;}
@@ -104,6 +111,11 @@ public:
   
   TVector3 GetReactionPosition(){return freacpos;}
   int GetReactionLayer(){return fReactionLayer;}
+
+
+  int GetNLayers(){return NLayers;}
+  int GetDimX(){return DimX;}
+  int GetDimY(){return DimY;}
 
 
   void Print(Option_t * ="") const override {
@@ -123,6 +135,12 @@ protected:
   vector<double> fbetas;
   
   TVector3 freacpos;
+  int DimX ;
+  int DimY ;
+  int NLayers ;
+
+
+  //vector<double> freacpos;
   
   ClassDef(SimEvent, 1);
 };

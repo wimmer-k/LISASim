@@ -67,6 +67,8 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent){
  fParticleGun->SetParticleDefinition(ion);
 
   //G4cout<<fbeamIn->getZ()<<G4endl;
+
+  
 	
   position=fbeamIn->getPosition();
   fParticleGun->SetParticlePosition(position);
@@ -82,6 +84,17 @@ void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent){
 
 
   SimEvent* sim = fdata->GetSimEvent();
+
+
+
+
+
+  sim->SetNLayers(fdetector->GetNbOfLayers());
+  sim->SetDimX(fdetector->Getdim_x());
+  sim->SetDimY(fdetector->Getdim_y());
+  
+
+
   sim->SetBeamEnergy(KE);
   
   sim->SetIncomingDirection(TVector3(direction.getX(),direction.getY(),direction.getZ()));

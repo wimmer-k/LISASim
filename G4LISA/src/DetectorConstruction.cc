@@ -33,6 +33,8 @@
      * @brief Default constructor.
      */
 DetectorConstruction::DetectorConstruction(){
+
+
   // Deafult geometry parameters, specify in the init_vis_mac file
   f_dim_x = 2;
   f_dim_y = 2;
@@ -421,6 +423,7 @@ G4LogicalVolume* Degrader_box = new G4LogicalVolume(DegBox_general,DegraderMater
 
   for(G4int ab=0; ab<=10;ab++){
     fLayerThickness[ab] = fLayerThick;
+    
     fLayerGap[ab] = fLayerGa;
     
   }
@@ -484,8 +487,19 @@ G4LogicalVolume* Degrader_box = new G4LogicalVolume(DegBox_general,DegraderMater
 
   G4cout << G4endl << "------------------------------------------------------------" << G4endl;
 
+
   
   return world_place;
+
+
+
+
+
+
+
+
+
+
 }
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......

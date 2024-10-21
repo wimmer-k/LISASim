@@ -59,7 +59,7 @@ public:
 
   //getters for the reaction
   std::vector<double> GetLayerMids() const {return fLayerMids;};
-
+  
 
 
   G4VPhysicalVolume* Construct() override;
@@ -90,6 +90,7 @@ private:
   G4double fLayerGap[MAXTARGETS];
 
   std::vector<double> fLayerMids ;
+  
 
 
 
@@ -100,6 +101,8 @@ private:
   G4Box* PCB_box ;
   G4Box* PCB_box_hole;  
   G4bool fCheckOverlaps = true; // option to activate checking of volumes overlaps
+
+
 };
 
 #endif

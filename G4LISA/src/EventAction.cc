@@ -6,7 +6,7 @@
 #include "G4SDManager.hh"
 #include "G4HCofThisEvent.hh"
 #include "G4UnitsTable.hh"
-
+#include "DetectorConstruction.hh"
 
 #include "Randomize.hh"
 EventAction::EventAction(DataManager* data){
@@ -14,6 +14,7 @@ EventAction::EventAction(DataManager* data){
   fevt = NULL;
   fdata = data;
   RGRL = 0 ;
+  RGRL2 = 0 ;
 }
 
 EventAction::~EventAction(){}
@@ -24,21 +25,39 @@ void EventAction::BeginOfEventAction(const G4Event* event){
 //random number generation for the reaction layer
  CLHEP::HepRandom::setTheSeed((unsigned)clock());
  RGRL = G4UniformRand();
+ //cout<<(unsigned)clock()<<endl;
+ //cout<<(unsigned)clock()<<endl;
+//random number generator for the reaction depth
+ CLHEP::HepRandom::setTheSeed((unsigned)clock()*(unsigned)clock());
+ RGRL2 = G4UniformRand();
  
 
   fevt = event;
+
+ //cout<<RGRL2*0.5 - 0.5*0.5<<"    EVENT NO:  "<<fevt->GetEventID()<<endl;
+
   EventInfo* eventInfo = new EventInfo();
   //cout << "fdata->GetSimEvent()->GetBeamEnergy() " << fdata->GetSimEvent()->GetBeamEnergy() << endl;
   eventInfo->SetSimEvent(fdata->GetSimEvent());
   
   G4EventManager::GetEventManager()->SetUserInformation(eventInfo);
   eventInfo = (EventInfo*)fevt->GetUserInformation();
+
+  eventInfo->GetSimEvent()->SetReactionLayer(-1); 
+  TVector3 init_reac(1,1,1) ;
+  eventInfo->GetSimEvent()->SetReactionPosition(init_reac) ;
+
+
+
   //cout << "eventInfo->GetSimEvent()->GetBeamEnergy() " << eventInfo->GetSimEvent()->GetBeamEnergy() << endl;
   G4SDManager * SDman = G4SDManager::GetSDMpointer();
+
+
+  /*
   G4int ntargets = 0;
-  G4int f_dim_x = 10; //////////////////////////
-  G4int f_dim_y = 10; //////////////////////////
-  G4int NofLayers = 10;
+  G4int f_dim_x = eventInfo->GetSimEvent()->GetDimX();///10; //////////////////////////
+  G4int f_dim_y = eventInfo->GetSimEvent()->GetDimY();//////////////////////////
+  G4int NofLayers = eventInfo->GetSimEvent()->GetNLayers();
   
   for(G4int t=0;t<NofLayers;t++){
       for(G4int j=0; j<f_dim_x; j++){ 
@@ -53,8 +72,8 @@ void EventAction::BeginOfEventAction(const G4Event* event){
                   //G4String s = name ;
                    G4int id = (SDman->GetHCtable())->GetCollectionID(name);
                    //G4cout<<id<<G4endl;
-                  if(id<0) {
-                    break;}
+                  //if(id<0) {
+                  //  break;}
                   //G4cout<<id<<G4endl;
                   //cout << "event action CollectionID["<<t<<"] " << endl;//<< ionCollectionID[t] << endl;
                   ntargets++;
@@ -63,9 +82,11 @@ void EventAction::BeginOfEventAction(const G4Event* event){
       }
   }
   //G4cout<<ntargets<<endl;
-  eventInfo->GetSimEvent()->SetNLayers(ntargets);
+  //eventInfo->GetSimEvent()->SetNDiamonds(ntargets);
   //eventInfo->GetSimEvent()->SetNLayers(1000);
   //G4cout<<ntargets<<"dsadsaasd"<<endl;
+
+  */
 }
 
 void EventAction::EndOfEventAction(const G4Event* event){
@@ -75,9 +96,9 @@ void EventAction::EndOfEventAction(const G4Event* event){
   eventInfo->GetSimEvent()->SetEventID(fevt->GetEventID());
   //cout << "event number " << eventInfo->GetSimEvent()->GetEventID()  <<endl;
   //cout << "eventInfo->GetSimEvent()->GetBeamEnergy() " << eventInfo->GetSimEvent()->GetBeamEnergy() << endl;
-  //cout << "event number " << eventInfo->GetSimEvent()->GetEventID()  << " with " <<  eventInfo->GetSimEvent()->GetNLayers() << " targets " << endl;
+  
   G4HCofThisEvent * HCE = event->GetHCofThisEvent();
-  for(int i=0;i<eventInfo->GetSimEvent()->GetNLayers();i++){
+  for(int i=0;i<eventInfo->GetSimEvent()->GetNDiamonds();i++){
     LISAHitsCollection* collection = (LISAHitsCollection*)(HCE->GetHC(i));
     //G4cout << i << ", collection->entries()" << collection->entries() << endl;
     

@@ -283,9 +283,9 @@ G4ThreeVector Outgoing_Beam::GetOutgoingMomentum()
   // Set the magnitude of the outgoing momentum ================================
 
   ppOut = pIn;
-  if( ppOut.mag() > 0)
-      ppOut.setMag( pLab );
-
+  //if( ppOut.mag() > 0)
+  //   ppOut.setMag( pLab );
+    ppOut.setMag( p1*m3/m1 );
   // Set the direction of the outgoing momentum ================================
 
   ax=pIn.cross(ez);
