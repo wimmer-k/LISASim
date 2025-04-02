@@ -23,13 +23,14 @@ public:
 
 G4double    getRGRL(){return RGRL;}
 G4double    getRGRL2(){return RGRL2;}
-
+G4double    getRGRL3(){return RGRL3;}
 
 private:
   const G4Event* fevt; // to communicate with steppingaction
   DataManager* fdata;
   G4double RGRL ;
   G4double RGRL2 ;
+  G4double RGRL3 ;
 
 };
 

@@ -39,6 +39,7 @@ private:
   G4UIcmdWithADoubleAndUnit* KW_thiccCmd;
   G4UIcmdWithADoubleAndUnit* KW_ZdimCmd; 
   G4UIcmdWithAnInteger* KW_switchCmd;
+  G4UIcmdWithAnInteger* RD_switchCmd;
   G4UIcmdWithADoubleAndUnit* KW_hCmd;
   G4UIcmdWithADoubleAndUnit* fLayerThickCmd;
   G4UIcmdWithADoubleAndUnit* fLayerGaCmd;

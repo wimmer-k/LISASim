@@ -57,6 +57,10 @@ public:
   void SetThetaSigmaA(G4double sig){sigma_a=sig;}
   void SetThetaSigmaB(G4double sig){sigma_b=sig;}
 
+  void SetProb_Bef(G4double x){Prob_Bef = x;}
+  void SetProb_In(G4double x){Prob_In = x;}
+  void SetProb_Aft(G4double x){Prob_Aft = x;}
+
   G4ParticleTable* particleTable; 
   G4DynamicParticle* ReactionProduct();
   G4ThreeVector ReactionPosition();
@@ -74,6 +78,11 @@ public:
   G4int    AboveThreshold(){return ThresholdFlag;}
   G4int    GetAin(){return Ain;}
   G4int    GetDA() {return DA[0] ;}
+  G4double GetProb_Bef(){return Prob_Bef;}
+  G4double GetProb_In(){return Prob_In;}
+  G4double GetProb_Aft(){return Prob_Aft;}
+  
+
 private:
   G4int Ain;
   G4int Zin;
@@ -121,6 +130,10 @@ private:
   G4int    Nxsect;
   G4double Xsect[1000];
   G4double twopi;
+
+  G4double Prob_Bef ;
+  G4double Prob_In ;
+  G4double Prob_Aft ; 
 
   G4ThreeVector GetOutgoingMomentum();
  

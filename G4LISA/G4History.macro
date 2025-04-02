@@ -55,8 +55,8 @@
 /BeamIn/Focus/Y 0.9 cm
 /BeamIn/Focus/DY 0.0 cm
 /BeamIn/Focus/Z 10 cm
-/BeamIn/Focus/maxAta 100 mrad
-/BeamIn/Focus/maxBta 0 mrad
+/BeamIn/Focus/maxAta 10 mrad
+/BeamIn/Focus/maxBta 00 mrad
 /BeamIn/Focus/Ata0 0 mrad
 /BeamIn/Focus/Bta0 0 mrad
 /BeamIn/Report
@@ -83,4 +83,3 @@
 /gui/addButton viewer "Flush viewer (= refresh + update)" "/vis/viewer/flush"
 /gui/addButton viewer "Update scene" "/vis/scene/notifyHandlers"
 /run/printProgress 100
-/run/beamOn 1

@@ -1,0 +1,70 @@
+# Macro file for example B4
+# 
+# Can be run in batch, without graphic
+# or interactively: Idle> /control/execute run1.mac
+#
+
+
+# geometry control
+
+/DetIn/NLay 2                            # lower than 10
+/DetIn/DimX 2                            # int
+/DetIn/DimY 2                            # int
+/DetIn/SizeXY 5 mm
+/DetIn/PCB_thic 1.6 mm
+/DetIn/SpaceX 1 mm
+/DetIn/SpaceY 1 mm
+/DetIn/BotDist 34.4 mm
+/DetIn/TopDist 20.4 mm
+/DetIn/SideDist 19.9 mm
+/DetIn/KWRad 10 mm
+/DetIn/KWThic 0.2 mm
+/DetIn/KWZ 10 mm
+/DetIn/KWSwitch 1                        # int 0 or 1
+/DetIn/KWh 8 mm                          # same as /BeamIn/Focus/Y
+/DetIn/LayThic 0.5 mm
+/DetIn/LayGap 10. mm
+/DetIn/RDSwitch 0
+
+
+
+
+
+# Change the default number of workers (in multi-threading mode) 
+/run/numberOfThreads 1
+#
+# Initialize kernel
+/run/initialize
+
+
+# Beam control
+/BeamIn/A 98
+/BeamIn/Z 41
+/BeamIn/KEu 285.74 MeV
+/BeamIn/Dpp 0.005
+/BeamIn/Focus/X 0 cm
+/BeamIn/Focus/DX 1.7 cm
+/BeamIn/Focus/Y 0.8 cm
+/BeamIn/Focus/DY 1.7 cm
+/BeamIn/Focus/Z 10 cm
+/BeamIn/Focus/maxAta 1.3 mrad
+/BeamIn/Focus/maxBta 1.3 mrad
+/BeamIn/Focus/Ata0 0 mrad
+/BeamIn/Focus/Bta0 0 mrad
+
+
+
+/BeamIn/Report
+
+
+/BeamOut/DA -2
+/BeamOut/DZ -1
+/BeamOut/ProbBef 0.3
+/BeamOut/ProbIn 0.6
+/BeamOut/ProbAft 0.1
+/BeamOut/Update
+
+
+
+/run/beamOn 250000
+

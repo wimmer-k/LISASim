@@ -3,6 +3,7 @@
 
 #include "G4VUserDetectorConstruction.hh"
 #include "globals.h"
+#include "CrazyDiamond.hh" 
 #include <vector>
 class G4Box;
 class G4LogicalVolume;
@@ -31,6 +32,7 @@ public:
   void SetKW_thicc(G4double);
   void SetKW_Zdim(G4double);
   void SetKW_switch(G4bool);
+  void SetRD_switch(G4bool);
   void SetKW_h(G4double);
   
   //setters for the reaction
@@ -55,6 +57,7 @@ public:
   G4double GetKW_thicc() const {return KW_thicc;};
   G4double GetKW_Zdim() const {return KW_Zdim;};
   G4bool GetKW_switch() const {return KW_switch;};
+  G4bool GetRD_switch() const {return RD_switch;};
   G4double GetKW_h() const {return KW_h;};
 
   //getters for the reaction
@@ -83,6 +86,7 @@ private:
   G4double KW_thicc = -1 ;
   G4double KW_Zdim = -2 ; 
   G4bool KW_switch = false ;
+  G4bool RD_switch = false ;
   G4double KW_h = -2 ;
   G4double fLayerThick = -1 ;
   G4double fLayerGa = -1 ;
@@ -101,6 +105,9 @@ private:
   G4Box* PCB_box ;
   G4Box* PCB_box_hole;  
   G4bool fCheckOverlaps = true; // option to activate checking of volumes overlaps
+
+  CrazyDiamond* Crazy_Diamond;
+
 
 
 };
