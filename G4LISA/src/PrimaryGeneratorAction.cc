@@ -23,6 +23,13 @@ PrimaryGeneratorAction::~PrimaryGeneratorAction(){
 }
 
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent){
+
+     if (fParticleGun) {
+       delete fParticleGun;  // delete previous instance if it exists
+   }
+
+
+
   //G4cout << __PRETTY_FUNCTION__ << G4endl;
   G4double worldZHalfLength = 0.;
   auto worldLV = G4LogicalVolumeStore::GetInstance()->GetVolume("World");

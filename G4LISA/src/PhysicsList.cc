@@ -40,6 +40,7 @@
 #include "G4EmStandardPhysics_option2.hh"
 #include "G4EmStandardPhysics_option3.hh"
 #include "G4EmStandardPhysics_option4.hh"
+#include "EmStandardPhysics_option4_Atima.hh"
 #include "G4EmStandardPhysicsWVI.hh"
 #include "G4EmStandardPhysicsGS.hh"
 #include "G4EmStandardPhysicsSS.hh"
@@ -88,11 +89,17 @@ PhysicsList::PhysicsList(DetectorConstruction* det) : G4VModularPhysicsList(),
   fHadPhysicsList(nullptr),fDet(det)
 {  
   //fMessenger = new PhysicsListMessenger(this); 
-  SetVerboseLevel(4);
+  SetVerboseLevel(0);
      
   // EM physics !!!!!!!!!!!
-  fEmName = G4String("emstandard_opt4");
-  fEmPhysicsList = new G4EmStandardPhysics_option4();
+  // fEmName = G4String("emstandard_opt4");
+  // fEmPhysicsList = new G4EmStandardPhysics_option4();
+  // fEmName = G4String("emstandardWVI");
+  // fEmPhysicsList = new G4EmStandardPhysicsWVI();
+    // Use ATIMA Stopping Powers
+   fEmName = G4String("emstandard_opt4_Atima");
+   fEmPhysicsList = new EmStandardPhysics_option4_Atima();
+  
 
   // Decay physics  
   fDecayPhysics = new G4DecayPhysics(1);
@@ -227,6 +234,11 @@ void PhysicsList::AddPhysicsList(const G4String& name)
     fEmName = name;
     delete fEmPhysicsList;
     fEmPhysicsList = new G4EmStandardPhysics_option4();
+
+    } else if (name == "emstandard_opt4_Atima") {
+    fEmName = name;
+    delete fEmPhysicsList;
+    fEmPhysicsList = new EmStandardPhysics_option4_Atima();
 
   } else if (name == "emstandardSS") {
 

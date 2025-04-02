@@ -2,6 +2,7 @@
  * @brief Detector construction class for LISA
  */
 
+#include "CrazyDiamond.hh" 
 #include "DetectorConstruction.hh"
 #include "SensitiveDetector.hh"
 #include "G4Material.hh"
@@ -18,6 +19,7 @@
 #include "G4AutoDelete.hh"
 #include  <vector>
 #include "G4SDManager.hh"
+#include "G4GDMLParser.hh"
 
 #include "G4VisAttributes.hh"
 #include "G4Colour.hh"
@@ -117,8 +119,20 @@ new G4Element("Magnesium", symbol="Mg", z=12., a = 24.305*g/mole);
 G4Element*elCa =
 new G4Element("Calcium", symbol="Ca", z=20., a = 40.078*g/mole);
 
+G4Element* elCr  = 
+new G4Element("Chromium","Cr",z = 24.,a=52.00*g/mole);
 
+G4Element* elMn   =  
+new G4Element("Manganese","Mn",z = 25.,54.94*g/mole);
 
+G4Element* elNi  = 
+new G4Element("Nickel","Ni",z = 28.,58.70*g/mole);
+
+G4Element* elFe  = 
+new G4Element("Iron","Fe",z = 26.,55.85*g/mole);
+
+G4Element* elTi  = 
+new G4Element("Titanium","Ti",z = 22.,47.867*g/mole);
 
 
 
@@ -130,6 +144,14 @@ Epoxy->AddElement(elO, natoms=5);
 Epoxy->AddElement(elCl, natoms=1);
 Epoxy->AddElement(elC, natoms=21);
 
+// Stainless steel (Medical Physics, Vol 25, No 10, Oct 1998)
+G4Material* SSteel = 
+new G4Material("SSteel",8.02*g/cm3,5);
+SSteel->AddElement(elMn, 0.02);
+SSteel->AddElement(elSi, 0.01);
+SSteel->AddElement(elCr, 0.19);
+SSteel->AddElement(elNi, 0.10);
+SSteel->AddElement(elFe, 0.68);
 
 
  G4Material* SiO2 =
@@ -175,8 +197,13 @@ G4Material* Aluminium =
 new G4Material("Aluminium", density = 2.71*g/cm3, ncomp=1);
 Aluminium->AddElement(elAl, natoms=1);
 
+G4Material* Aluminum =
+new G4Material("Aluminum", density = 2.71*g/cm3, ncomp=1);
+Aluminum->AddElement(elAl, natoms=1);
 
-
+G4Material* Titanium =
+new G4Material("Titanium", density = 4.519*g/cm3, ncomp=1);
+Titanium->AddElement(elTi, natoms=1);
 
 //constructing "Kapton"  (Invented by the DuPont Corporation in the 1960s)
 
@@ -211,6 +238,10 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes()
   auto KaptonMaterial = G4Material::GetMaterial("Kapton");
 
   auto DegraderMaterial = G4Material::GetMaterial("Aluminium");
+
+  auto SSteelMaterial = G4Material::GetMaterial("SSteel");
+
+  auto WindowMaterial = G4Material::GetMaterial("Titanium");
 
   if ( ! defaultMaterial || ! LISAMaterial ) {
     G4ExceptionDescription msg;
@@ -366,7 +397,9 @@ PCB_general->SetVisAttributes(PCB_vis_attributes);
 
 G4VSolid* KW_tube_solid = new G4Tubs("tube1",0 ,KW_radius ,KW_thicc/2,0,180);
 
-G4LogicalVolume* KW_tube = new G4LogicalVolume(KW_tube_solid,KaptonMaterial, "kapton_win");
+//G4LogicalVolume* KW_tube = new G4LogicalVolume(KW_tube_solid,KaptonMaterial, "kapton_win");
+
+G4LogicalVolume* KW_tube = new G4LogicalVolume(KW_tube_solid,WindowMaterial, "kapton_win");
 
   G4VisAttributes* Kapton_vis_attributes = new G4VisAttributes();
   Kapton_vis_attributes->SetColor(0.529,0.357,0.016,0.4);
@@ -408,6 +441,109 @@ G4LogicalVolume* Degrader_box = new G4LogicalVolume(DegBox_general,DegraderMater
 
 
 
+//--------------------------- reading volumes from a .gdml file ----------------------------------------
+
+G4GDMLParser fParser;
+fParser.Read("chamber_Aluminum_txt.gdml") ;
+G4VPhysicalVolume* Chambres_vol = fParser.GetWorldVolume();
+//you can get logical volume out of physical volume ???
+G4LogicalVolume* Chambres_log = Chambres_vol->GetLogicalVolume();
+
+  G4VisAttributes* Chambres_vis_attributes = new G4VisAttributes();
+  Chambres_vis_attributes->SetColor(0.537,0.561,0.62,0.6);
+  Chambres_vis_attributes->SetForceAuxEdgeVisible (true) ;
+  Chambres_vis_attributes->SetForceWireframe (true);
+  Chambres_vis_attributes->SetForceSolid(true);
+
+  Chambres_log->SetVisAttributes(Chambres_vis_attributes);
+
+
+
+
+//--------------------------- reading volumes from a .gdml file  END ----------------------------------------
+
+
+
+
+//--------------------------- loading the diamond thicknesses  ----------------------------------------
+
+std::ifstream myStr ; 
+
+G4double ax,cx,dx,ex,fx,gx,hx;
+G4String bx;
+G4String line; 
+
+std::vector <double> Loaded_DimX ;
+std::vector <double> Loaded_DimY ; 	
+std::vector <double> Loaded_Thickness ;
+
+
+
+//READING THE SPECTRUM FROM THE CODE
+myStr.open("Diamond_Dimensions.set");
+
+
+if(!myStr) { // file couldn't be opened
+      std::cerr << "Error: file could not be opened" <<std::endl;
+      exit(1);
+   }
+
+int licz=0;
+double gxx=0 ;
+double cxx=0;
+double lxx=0;
+
+
+
+while (std::getline(myStr, line)) { 
+        // Condition to ignore a specific line 
+    if (line[0] == '#') { 
+            continue;  // Move to the next iteration without processing the line 
+        } 
+    while (myStr>>ax>>bx>>cx>>dx>>ex>>fx>>gx>>hx)
+    {
+
+	    gxx=fx ;
+	    cxx=gx ;
+      lxx=hx ;
+
+	    Loaded_DimX.push_back(gxx);
+	    Loaded_DimY.push_back(cxx);
+      Loaded_Thickness.push_back(lxx);
+
+	//licz+=1;
+
+
+      }
+}
+  myStr.close ();
+
+
+
+
+
+std::vector<G4Box*> Diamond_Box_vector ; 
+Crazy_Diamond = new CrazyDiamond();  
+  for(G4int i=0; i<fNofLayers; i++){
+    for(G4int j=0; j<f_dim_x; j++){  
+          for(G4int k=0; k<f_dim_y; k++){  
+
+              Crazy_Diamond->setDThickness(Loaded_Thickness[licz]);
+              Crazy_Diamond->setDDimX(Loaded_DimX[licz]);
+              Crazy_Diamond->setDDimY(Loaded_DimY[licz]);
+
+              Diamond_Box_vector.push_back(Crazy_Diamond->Build());
+
+              G4cout<<Loaded_DimX[licz]<<"   "<<Loaded_DimY[licz]<<"    "<<Loaded_Thickness[licz]<<G4endl;
+              
+                       
+
+
+              licz+=1;
+
+          }
+    }
+  }
 
 
 
@@ -415,6 +551,21 @@ G4LogicalVolume* Degrader_box = new G4LogicalVolume(DegBox_general,DegraderMater
 
 
 
+
+
+
+
+
+
+
+
+
+//--------------------------- reading the diamond thicknesses END ----------------------------------------
+
+
+
+
+//G4int Real_Dimensions_Switch = 0;
 
 
 
@@ -429,9 +580,10 @@ G4LogicalVolume* Degrader_box = new G4LogicalVolume(DegBox_general,DegraderMater
   }
 
   G4int mi = 0;
+  G4int i = 0 ;
   G4double x = 0*cm; // front of first layer is at 0
   G4cout << G4endl << "------------------------------------------------------------" << G4endl;
-  for(G4int i=0; i<fNofLayers; i++){
+  for(i=0; i<fNofLayers; i++){
     G4cout << "---> Constructing LISA layer " << i << " of " << fNofLayers;
     G4cout << ": thickness = " <<  fLayerThickness[i] << " mm, gap after = " << fLayerGap[i] << G4endl;
 
@@ -441,11 +593,24 @@ G4LogicalVolume* Degrader_box = new G4LogicalVolume(DegBox_general,DegraderMater
               sprintf(name, "Diamond_%d%d%d", i,j,k);
               
               
+
+              if(RD_switch == true ){
+              //fLayer_solid[mi] = new G4Box(name,                //its name
+              //   DiamondSizeXY/2,DiamondSizeXY/2,fLayerThickness[i]/2);
+              fLayer_logic[mi] = new G4LogicalVolume(Diamond_Box_vector[mi],    //its solid
+                      LISAMaterial, //its material
+                      name);}
+              else{
               fLayer_solid[mi] = new G4Box(name,                //its name
-                  DiamondSizeXY/2,DiamondSizeXY/2,fLayerThickness[i]/2);
+                 DiamondSizeXY/2,DiamondSizeXY/2,fLayerThickness[i]/2);
               fLayer_logic[mi] = new G4LogicalVolume(fLayer_solid[mi],    //its solid
                       LISAMaterial, //its material
-                      name);
+                      name);}
+
+
+              
+
+
           #ifdef G4VIS_USE
               double sred = red[0]+i*(red[1]-red[0])/(fNofLayers-1);
               double sgre = gre[0]+i*(gre[1]-gre[0])/(fNofLayers-1);
@@ -456,7 +621,7 @@ G4LogicalVolume* Degrader_box = new G4LogicalVolume(DegBox_general,DegraderMater
             
               fLayer_logic[mi]->SetVisAttributes(detectorVisAtt);
           #endif
-              G4cout<<xes[j]<<"   "<<yes[k]<<"  "<<j<<"  zet  "<<x<<""  ""<<name<<G4endl;
+              G4cout<<xes_new[mi]<<"   "<<yes_new[mi]<<"  "<<j<<"  zet  "<<x<<""  ""<<name<<"  lp:  "<<mi<<G4endl;
               fLayer_place[mi] = new G4PVPlacement(0,              
                     G4ThreeVector(xes_new[mi]*mm,yes_new[mi]*mm,-x), //xes and yes are the vectors of the positions of holes in the PCB
                     fLayer_logic[mi],               
@@ -470,7 +635,7 @@ G4LogicalVolume* Degrader_box = new G4LogicalVolume(DegBox_general,DegraderMater
   }
   }
 
-    new G4PVPlacement(0,G4ThreeVector(0.*mm,0.*mm,-x*mm),PCB_general,"plate_general",world_logic,false,0) ;
+    new G4PVPlacement(0,G4ThreeVector(0.*mm,0.*mm,-x*mm),PCB_general,"plate_general",world_logic,false,0) ; //PCB_PLACMENT
     //placement of the degrader (to be passed to the messenger)
     //if((i+1)!=fNofLayers){
     //new G4PVPlacement(0,G4ThreeVector(0.*mm,0.*mm,-x*mm -fLayerGap[i]/2 *mm),Degrader_box,"deg_general",world_logic,false,0) ;}
@@ -481,8 +646,17 @@ G4LogicalVolume* Degrader_box = new G4LogicalVolume(DegBox_general,DegraderMater
 
 
   if(KW_switch==true){
-    new G4PVPlacement(0,G4ThreeVector(0.*mm,KW_h*mm,KW_Zdim*mm),KW_tube,"KW_tube",world_logic,false,0) ;
+    new G4PVPlacement(0,G4ThreeVector(0.*mm,KW_h*mm,KW_Zdim*mm),KW_tube,"KW_tube",world_logic,false,0) ;   //placement of the window/degrader before LISA
   }
+
+
+  //new G4PVPlacement(0,G4ThreeVector(2.*mm,2*mm,2*mm),Chambres_log,"Chambres_logic",world_logic,false,0) ;
+
+
+
+//--------------------------- Assembling the detector setup    END  ----------------------------------------
+
+
 
 
   G4cout << G4endl << "------------------------------------------------------------" << G4endl;
@@ -682,6 +856,25 @@ if(in==false){
 }
 
 }   
+
+
+
+void DetectorConstruction::SetRD_switch(G4bool in)
+{
+
+  RD_switch=in;
+
+  if(in==true){
+  //  G4cout<<"----> Real Diamond Dimensions are enabled" G4endl;
+}
+if(in==false){
+  //  G4cout<<"----> Real Diamond Dimensions are disabled" G4endl;
+}
+
+}   
+
+
+
 
 
 void DetectorConstruction::SetKW_h(G4double in)

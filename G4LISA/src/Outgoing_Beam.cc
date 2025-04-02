@@ -21,6 +21,10 @@ Outgoing_Beam::Outgoing_Beam()
   theta_bin=0.;
   twopi=8.*atan(1.);
   beamIn = NULL;
+
+  Prob_Bef = 0.8;
+  Prob_In = 0.2;
+  Prob_Aft = 0.0;
  
 }
 
@@ -162,10 +166,10 @@ void Outgoing_Beam::setDecayProperties()
 void Outgoing_Beam::ScanInitialConditions(const G4Track & aTrack)
 {
  //G4cout<<"hi I am a little scan ////////////////////////////////////////////////////////////////////////////"<<endl;
-    DZ.push_back(-1);
-    DA.push_back(-1);
+    //DZ.push_back(-1);
+    //DA.push_back(-1);
 
-   // cout<<DZ.size()<<endl;
+  //cout<<DZ.size()<<endl;
   dirIn=aTrack.GetMomentumDirection();
   posIn=aTrack.GetPosition();
   pIn=aTrack.GetMomentum();
@@ -218,7 +222,7 @@ G4DynamicParticle* Outgoing_Beam::ReactionProduct()
      
     Zout = Zin + DZ[0];
     Aout = Ain + DA[0];
-   // G4cout<<"ReactionProduct() finished"<<endl; 
+    //G4cout<<"ReactionProduct() finished"<<endl; 
     excitationEnergy = Ex;
   }
 
@@ -232,8 +236,8 @@ G4DynamicParticle* Outgoing_Beam::ReactionProduct()
     = new G4DynamicParticle(product, GetOutgoingMomentum());
   //G4cout<<"momentum "<<GetOutgoingMomentum().getX()<<G4endl;
  
-      DZ.pop_back();
-    DA.pop_back();
+    //DZ.pop_back();
+    //DA.pop_back();
  return aReactionProduct;
 }
 //---------------------------------------------------------
@@ -364,6 +368,12 @@ void Outgoing_Beam::Report()
 	 << TarA << G4endl;
   G4cout << "----> Target Z (for kinematics calculations) is set to "
 	 << TarZ << G4endl;
+  G4cout << "----> Probability of reaction in the window before the LISA setup is set to "
+	 << Prob_Bef << G4endl;
+  G4cout << "----> Probability of reaction in the LISA setup (PCB+ the detectors !!!!!!!!!) is set to "
+	 << Prob_In << G4endl;
+  G4cout << "----> Probability of reaction after the LISa setup (for the simulation this effectively means no reaction) is set to "
+	 << Prob_Aft << G4endl;
   G4cout << "----> Excitation energy of the outgoing beam set to "
 	 << G4BestUnit(Ex, "Energy") << G4endl;
   G4cout << "----> Target excitation energy set to "
@@ -381,6 +391,6 @@ void Outgoing_Beam::Report()
   G4cout << "----> Sigma for bta distribution set to "
 	 << sigma_b << G4endl;
 
-  G4IonTable::GetIonTable()->DumpTable();
+  //G4IonTable::GetIonTable()->DumpTable(); //I dont need this
 }
 //---------------------------------------------------------

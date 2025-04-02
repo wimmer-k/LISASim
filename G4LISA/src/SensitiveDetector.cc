@@ -6,7 +6,15 @@ SensitiveDetector::SensitiveDetector(const G4String& name)
   collectionName.insert(name);
 }
 
-SensitiveDetector::~SensitiveDetector(){;}
+SensitiveDetector::~SensitiveDetector(){
+  
+    //if(fhitsCollection) {
+    //for (size_t i = 0; i < fhitsCollection->entries(); ++i) {
+      //delete (*fhitsCollection)[i];  // Delete each LISAHit object
+    //}
+  
+  //delete fhitsCollection;
+}
 
 void SensitiveDetector::Initialize(G4HCofThisEvent* evnt){
   //G4cout << __PRETTY_FUNCTION__ << "\t" << HC << "\t"<< name << G4endl;

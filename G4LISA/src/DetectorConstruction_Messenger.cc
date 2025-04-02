@@ -75,9 +75,14 @@ DetectorConstruction_Messenger::DetectorConstruction_Messenger(DetectorConstruct
   KW_ZdimCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 
   KW_switchCmd = new G4UIcmdWithAnInteger("/DetIn/KWSwitch",this);
-  KW_switchCmd->SetGuidance("Select the number of steps in the target");
+  KW_switchCmd->SetGuidance("Select the window switch");
   KW_switchCmd->SetParameterName("choice",false);
   KW_switchCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
+
+  RD_switchCmd = new G4UIcmdWithAnInteger("/DetIn/RDSwitch",this);
+  RD_switchCmd->SetGuidance("Select the Real Diamond Dimension switch");
+  RD_switchCmd->SetParameterName("choice",false);
+  RD_switchCmd->AvailableForStates(G4State_PreInit,G4State_Idle);
 
   KW_hCmd = new G4UIcmdWithADoubleAndUnit("/DetIn/KWh",this);
   KW_hCmd->SetGuidance("Select the position of the target along the beam axis (Z direction.");
@@ -118,6 +123,7 @@ DetectorConstruction_Messenger::~DetectorConstruction_Messenger()
   delete KW_ZdimCmd; 
   delete KW_switchCmd;
   delete KW_hCmd;
+  delete RD_switchCmd;
   delete fLayerThickCmd;
   delete fLayerGaCmd;
 }
@@ -169,6 +175,9 @@ void DetectorConstruction_Messenger::SetNewValue(G4UIcommand* command,G4String n
 
   if( command == KW_switchCmd )
    { DetIn->SetKW_switch(KW_switchCmd->GetNewIntValue(newValue));}
+
+  if( command == RD_switchCmd )
+   { DetIn->SetRD_switch(RD_switchCmd->GetNewIntValue(newValue));}
 
   if( command == KW_hCmd )
    { DetIn->SetKW_h(KW_hCmd->GetNewDoubleValue(newValue));}

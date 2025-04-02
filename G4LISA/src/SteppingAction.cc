@@ -77,6 +77,7 @@ G4ThreeVector deltaPosition = aStep ->GetDeltaPosition();
 if(deltaPosition[0]==0){
  
   //G4cout<<aStep->GetPreStepPoint()->GetPosition().x()<<"    "<<aStep->GetPreStepPoint()->GetPosition().y()<<"     "<<aStep->GetPreStepPoint()->GetPosition().z()<<endl;
+
   //cout<<"test"<<endl;
   ReactionPosition.SetX(aStep->GetPreStepPoint()->GetPosition().x()) ;
   ReactionPosition.SetY(aStep->GetPreStepPoint()->GetPosition().y()) ;
@@ -86,6 +87,8 @@ if(deltaPosition[0]==0){
 }
 //G4cout<<deltaPosition[0]<<"     "<<deltaPosition[1]<<"       "<<deltaPosition[2]<<"  "<<endl;
 if( aStep->GetTrack()!=nullptr && aStep->GetTrack()->GetCreatorProcess()!=nullptr){
+
+
 G4String procName = aStep->GetTrack()->GetCreatorProcess()->GetProcessName();
  if(procName=="Reaction"){
  //cout<<"REACTIONSSSSS"<<endl;

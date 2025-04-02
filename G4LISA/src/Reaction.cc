@@ -150,6 +150,8 @@ feventAction = (EventAction*)G4RunManager::GetRunManager()->GetUserEventAction()
 EventInfo* eventInfo = (EventInfo*)feventAction->GetEvent()->GetUserInformation();
 G4double r = feventAction->getRGRL();
 G4double r2 = feventAction->getRGRL2();
+G4double r3 = feventAction->getRGRL3();
+
  CLHEP::HepRandom::setTheSeed((unsigned)clock());
   //double rand = G4UniformRand();
   //G4double r= G4UniformRand();
@@ -164,7 +166,7 @@ std::vector<double> Mids = Det->GetLayerMids();
 if(eventInfo->GetSimEvent()->GetReactionLayer() <0){ eventInfo->GetSimEvent()->SetReactionLayer(RLayer); } 
 //cout<<eventInfo->GetSimEvent()->GetReactionLayer()<<endl;
 //cout<<r<<"    "<<NLayers<<"  "<<1./NLayers*(i-1.)<<"   "<<1./NLayers*i<<endl;
-
+//G4cout<<BeamOut->GetProb_Bef()<<G4endl;
 
 
 //cout<<RLayer<<"       RLAYER"<<endl;
@@ -174,13 +176,13 @@ if(eventInfo->GetSimEvent()->GetReactionLayer() <0){ eventInfo->GetSimEvent()->S
   G4UserLimits* pUserLimits
     = aTrack.GetVolume()->GetLogicalVolume()->GetUserLimits();
     //cout<<name<<endl;
-  if(G4StrUtil::contains(name, "Diamond")){
-
+  //if(G4StrUtil::contains(name, "Diamond")){
+    if(r3<BeamOut->GetProb_In()){
       for(int i=1;i<=NLayers;i++){
-        if(r>(1/NLayers*(i-1))&&r<=(1/NLayers*i)){RLayer = i-1 ;}
+        if(r>(1/NLayers*(i-1))&&r<=(1/NLayers*i)){RLayer = i-1 ;}  // determination of the reaction layer based on the random generated number (one number for one event) 
         }
       
-     
+    }
 
 
      //G4cout<<aTrack.GetDynamicParticle()->GetParticleDefinition()->GetParticleName()<<" particle name"<<endl;
@@ -211,15 +213,24 @@ if(eventInfo->GetSimEvent()->GetReactionLayer() <0){ eventInfo->GetSimEvent()->S
 
     G4double thic = Det->GetLayerThickness(RLayer) ; 
     //cout<<r<<"    "<<thic<<"   "<<RLayer<<endl;
-    G4double ZReaction= (Mids[RLayer]+ (r2*thic - 0.5*thic));
+    G4double ZReaction = -100.0  ; 
 
-    //cout<<r*thic - 0.5*thic<<endl;
+    if(r3<BeamOut->GetProb_In()){
+
+      ZReaction= (Mids[RLayer]+ (r2*thic - 0.5*thic));}
+
+    if(r3>=BeamOut->GetProb_In() && r3 < (BeamOut->GetProb_In()+BeamOut->GetProb_Bef())) {
+      ZReaction= Det->GetKW_Zdim() ;
+      }
+      if(r3>=(BeamOut->GetProb_In()+BeamOut->GetProb_Bef()) && r3 <= (BeamOut->GetProb_In()+BeamOut->GetProb_Bef()+BeamOut->GetProb_Aft())){ eventInfo->GetSimEvent()->SetReactionLayer(999); } 
+
+    //cout<<r2*thic - 0.5*thic<<endl;
     //cout<<ZReaction<<"   ZReaction"<<endl;
     //G4double ZReaction= -7.75;
     //cout<<Mids[RLayer]<<endl;
     //G4cout<<"Reaction should be in Layer  "<<RLayer<<endl;
 
-
+    //ZReaction = -100.0  ;   ////////////////////////////////////////////////////     comment if you want to have reaction !!!!!!!!!!!!!!!!1111111
 
     G4double ZCurrent=aTrack.GetPosition().getZ();
     G4double Z=(ZReaction-ZCurrent);
@@ -247,6 +258,7 @@ if(eventInfo->GetSimEvent()->GetReactionLayer() <0){ eventInfo->GetSimEvent()->S
       //  G4cout<<" Z[mm]: reaction "<<ZReaction/mm<<" current "<<ZCurrent/mm<<" DZ "<<Z/mm<<G4endl;
       //cout<<RLayer<<endl;
        eventInfo->GetSimEvent()->SetReactionLayer(RLayer);  
+       if(G4StrUtil::contains(name, "plate")){eventInfo->GetSimEvent()->SetReactionLayer(RLayer+10);}  
        //cout<<ZReaction<<endl;
       reaction_here = true;
       if( BeamOut->TargetExcitation() ) 
@@ -258,7 +270,7 @@ if(eventInfo->GetSimEvent()->GetReactionLayer() <0){ eventInfo->GetSimEvent()->S
 
 
 
-  }
+  //}
     
 
 
