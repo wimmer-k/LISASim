@@ -46,6 +46,7 @@
 #include "SteppingAction.hh"
 #include "Incoming_Beam.hh"
 #include "Outgoing_Beam.hh"
+#include "Outgoing_Beam_Messenger.hh"
 #include "Incoming_Beam_Messenger.hh"
 #include "DetectorConstruction_Messenger.hh"
 
@@ -165,6 +166,7 @@ int main(int argc,char** argv)
   Outgoing_Beam* BeamOut = new Outgoing_Beam();
   BeamOut->defaultIncomingIon(BeamIn);
   physicsList->SetOutgoingBeam(BeamOut);
+  Outgoing_Beam_Messenger* OutgoingBeamMessenger = new Outgoing_Beam_Messenger(BeamOut);
   //cout<<"out_beam"<<endl;
 
   // cout << "Primary Generator" << endl;
@@ -212,6 +214,7 @@ int main(int argc,char** argv)
   delete BeamIn;
   delete IncomingBeamMessenger;
   delete BeamOut;
+  delete OutgoingBeamMessenger;
   delete Detector_Messenger;
 
 }

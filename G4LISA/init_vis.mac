@@ -1,20 +1,11 @@
-# Macro file for the initialization of example B4
-# in interactive session
-#
-# Set some default verbose
-#
 
-
-/control/verbose 2
-/control/saveHistory
-/run/verbose 0
 
 # geometry control
 
-/DetIn/NLay 3                            # lower than 10
+/DetIn/NLay 2                            # lower than 10
 /DetIn/DimX 2                            # int
 /DetIn/DimY 2                            # int
-/DetIn/SizeXY 4.44 mm
+/DetIn/SizeXY 5 mm
 /DetIn/PCB_thic 1.6 mm
 /DetIn/SpaceX 1 mm
 /DetIn/SpaceY 1 mm
@@ -22,44 +13,59 @@
 /DetIn/TopDist 20.4 mm
 /DetIn/SideDist 19.9 mm
 /DetIn/KWRad 10 mm
-/DetIn/KWThic 0.0127 mm
+/DetIn/KWThic 0.2 mm
 /DetIn/KWZ 10 mm
-/DetIn/KWSwitch 0                        # int 0 or 1
+/DetIn/KWSwitch 1                        # int 0 or 1
 /DetIn/KWh 8 mm                          # same as /BeamIn/Focus/Y
 /DetIn/LayThic 0.5 mm
-/DetIn/LayGap 7. mm
+/DetIn/LayGap 10. mm
+/DetIn/RDSwitch 0                        # load the real diamond dimensions from the Diamond_Dimensions.set file
 
 
 
 
+# /DetIn/ReacFracBef                  #    -
+# /DetIn/ReacFracIn                   #    |     if those three don't add up to 1, stranger things might happen
+# /DetIn/Reac/FracAft                 #    -
 
-# Change the default number of threads (in multi-threaded mode)
-/run/numberOfThreads 1
-#
+# Change the default number of workers (in multi-threading mode) 
+/run/numberOfThreads 1                   # DO NOT touch this line
+
+
+
+
 # Initialize kernel
 /run/initialize
-#
+
 # Visualization setting
 /control/execute vis.mac
 
 
 # Beam control
-/BeamIn/A 238
-/BeamIn/Z 92
-/BeamIn/KEu 796 MeV
-/BeamIn/Dpp 0.0
-/BeamIn/Focus/X -0.3 cm
-/BeamIn/Focus/DX 0.0 cm
-/BeamIn/Focus/Y 0.9 cm
-/BeamIn/Focus/DY 0.0 cm
+/BeamIn/A 98
+/BeamIn/Z 41
+/BeamIn/KEu 285.74 MeV
+/BeamIn/Dpp 0.005
+/BeamIn/Focus/X 0 cm
+/BeamIn/Focus/DX 1.8 cm
+/BeamIn/Focus/Y 0.8 cm
+/BeamIn/Focus/DY 1.8 cm
 /BeamIn/Focus/Z 10 cm
-/BeamIn/Focus/maxAta 100 mrad
-/BeamIn/Focus/maxBta 0 mrad
-/BeamIn/Focus/Ata0 0 mrad #-144 mrad
+/BeamIn/Focus/maxAta 1.3 mrad
+/BeamIn/Focus/maxBta 1.3 mrad
+/BeamIn/Focus/Ata0 0 mrad
 /BeamIn/Focus/Bta0 0 mrad
 
+#/BeamIn/Report
+
+/BeamOut/DA -2
+/BeamOut/DZ -1
+/BeamOut/ProbBef 0.3
+/BeamOut/ProbIn 0.6
+/BeamOut/ProbAft 0.1
+/BeamOut/Update
+
+#/run/beamOn 50000
 
 
-/BeamIn/Report
 
-#/run/beamOn 500
