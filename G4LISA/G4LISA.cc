@@ -49,6 +49,9 @@
 #include "Outgoing_Beam_Messenger.hh"
 #include "Incoming_Beam_Messenger.hh"
 #include "DetectorConstruction_Messenger.hh"
+#include "G4Timer.hh"
+G4Timer Timer;
+G4Timer Timerintern;
 
 //....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
@@ -66,6 +69,11 @@ namespace {
 
 int main(int argc,char** argv)
 {
+
+
+  G4long seed;
+  seed = time(0);
+  G4Random::setTheSeed(seed);
 
   G4String rootFile = "LISA.root";
 
@@ -109,7 +117,7 @@ int main(int argc,char** argv)
   }
 
   // Optionally: choose a different Random engine...
-  // G4Random::setTheEngine(new CLHEP::MTwistEngine);
+   //G4Random::setTheEngine(new CLHEP::MTwistEngine);
 
   // Use G4SteppingVerboseWithUnits
   if ( verboseBestUnits ) {
